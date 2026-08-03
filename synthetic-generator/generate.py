@@ -80,7 +80,7 @@ def build_incident(template: dict, index: int) -> dict:
 def main() -> None:
     parser = argparse.ArgumentParser(description=__doc__)
     parser.add_argument("--count", type=int, default=30)
-    parser.add_argument("--out", default=str(REPO_ROOT / "eval" / "incidents.jsonl"))
+    parser.add_argument("--out", default=str(REPO_ROOT / "eval" / "controlled" / "incidents.jsonl"))
     parser.add_argument("--templates-dir", default=str(DEFAULT_TEMPLATES_DIR))
     parser.add_argument("--seed", type=int, default=None, help="random seed, for reproducible batches")
     args = parser.parse_args()

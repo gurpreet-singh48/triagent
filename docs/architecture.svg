@@ -71,6 +71,10 @@
   <text x="340" y="333" font-size="10.5" fill="#6b7280">Redis (idempotency keys)</text>
   <text x="340" y="349" font-size="10.5" fill="#6b7280">Qdrant (for RAG chat retrieval)</text>
 
+  <rect x="345" y="363" width="240" height="38" rx="6" fill="#dbeafe" stroke="#2563eb" stroke-width="1.2"/>
+  <text x="465" y="379" text-anchor="middle" font-size="10.5" font-weight="600" fill="#1e3a8a">IncidentRetryScheduler</text>
+  <text x="465" y="393" text-anchor="middle" font-size="9" fill="#1e3a8a">RETRYING &#8594; backoff &#8594; retry /triage</text>
+
   <rect x="680" y="140" width="320" height="150" rx="10" fill="#f5f3ff" stroke="#7c3aed" stroke-width="1.5"/>
   <text x="840" y="163" text-anchor="middle" font-size="14" font-weight="700" fill="#111827">Agent Service</text>
   <text x="840" y="178" text-anchor="middle" font-size="11" fill="#5b21b6">FastAPI + LangGraph</text>

@@ -8,14 +8,13 @@ import logging
 import os
 import time
 import traceback
-from typing import Callable, Optional
+from collections.abc import Callable
 
 from langgraph.graph import END, START, StateGraph
 from prometheus_client import Histogram
 
-from . import callback
+from . import callback, retrieval
 from . import classify as classify_module
-from . import retrieval
 from .redaction import build_incident_text, redact
 from .schemas import GraphState
 
@@ -133,7 +132,7 @@ def get_graph():
     return _compiled_graph
 
 
-def run_triage(incident_id: str, routing_key: Optional[str], dedup_key: Optional[str], payload: dict) -> GraphState:
+def run_triage(incident_id: str, routing_key: str | None, dedup_key: str | None, payload: dict) -> GraphState:
     """Runs the graph for one incident. A node failure anywhere in the graph
     (retrieval error, OpenAI error, etc.) is caught here and always routed
     through error_handler, which fires the FAILED callback — this is the

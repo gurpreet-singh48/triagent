@@ -2,15 +2,20 @@
 from __future__ import annotations
 
 import os
-from typing import Optional
 
 from openai import OpenAI
 
+from .metrics import record_usage
 from .schemas import Classification, RetrievedDoc
 
 CHAT_MODEL = os.environ.get("OPENAI_CHAT_MODEL", "gpt-4o-mini")
 
-_client: Optional[OpenAI] = None
+# The OpenAI SDK retries transient errors (connection failures, timeouts,
+# 429, 5xx) internally with its own exponential backoff+jitter — this makes
+# the attempt limit explicit rather than relying on the SDK default.
+OPENAI_MAX_RETRIES = 3
+
+_client: OpenAI | None = None
 
 SYSTEM_PROMPT = (
     "You are an incident-triage classifier for an internal platform with three services: "
@@ -26,7 +31,7 @@ SYSTEM_PROMPT = (
 def _openai() -> OpenAI:
     global _client
     if _client is None:
-        _client = OpenAI(api_key=os.environ["OPENAI_API_KEY"])
+        _client = OpenAI(api_key=os.environ["OPENAI_API_KEY"], max_retries=OPENAI_MAX_RETRIES)
     return _client
 
 
@@ -49,4 +54,6 @@ def classify(redacted_text: str, retrieved_docs: list[RetrievedDoc]) -> Classifi
         ],
         response_format=Classification,
     )
+    if completion.usage:
+        record_usage("chat", completion.usage.prompt_tokens, completion.usage.completion_tokens)
     return completion.choices[0].message.parsed

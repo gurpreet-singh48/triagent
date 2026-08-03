@@ -79,6 +79,21 @@ public class Incident implements Persistable<UUID> {
     @Column(name = "received_at")
     private OffsetDateTime receivedAt;
 
+    @Column(name = "attempt_count", nullable = false)
+    private int attemptCount = 0;
+
+    @Column(name = "failure_stage")
+    private String failureStage;
+
+    @Column(name = "error_category")
+    private String errorCategory;
+
+    @Column(name = "last_error", columnDefinition = "TEXT")
+    private String lastError;
+
+    @Column(name = "next_retry_at")
+    private OffsetDateTime nextRetryAt;
+
     @Column(name = "created_at")
     private OffsetDateTime createdAt;
 

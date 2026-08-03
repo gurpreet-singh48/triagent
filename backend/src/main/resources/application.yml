@@ -44,7 +44,12 @@ triagent:
   confidence-threshold: ${TRIAGE_CONFIDENCE_THRESHOLD:0.9}
   agent-service:
     url: ${AGENT_SERVICE_URL:http://localhost:8000}
+    connect-timeout-ms: ${AGENT_SERVICE_CONNECT_TIMEOUT_MS:5000}
+    read-timeout-ms: ${AGENT_SERVICE_READ_TIMEOUT_MS:30000}
   synthetic-templates-dir: ${SYNTHETIC_TEMPLATES_DIR:synthetic-generator/templates}
+  internal-service-token: ${INTERNAL_SERVICE_TOKEN:dev-local-internal-token}
+  retry:
+    poll-interval-ms: ${INCIDENT_RETRY_POLL_INTERVAL_MS:30000}
 
 management:
   endpoints:

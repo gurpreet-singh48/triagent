@@ -15,10 +15,13 @@ venv/
 frontend/node_modules/
 frontend/dist/
 
-# Eval output
-eval/report/*.json
-eval/report/*.md
-eval/incidents.jsonl
+# Eval output (raw/regenerable; the committed evidence lives in docs/evaluation-report.md
+# and docs/evaluation-results.json instead)
+eval/controlled/report/*.json
+eval/controlled/report/*.md
+eval/controlled/incidents.jsonl
+eval/heldout/report/*.json
+eval/heldout/report/*.md
 
 # OS
 .DS_Store

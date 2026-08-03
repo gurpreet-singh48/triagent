@@ -1,0 +1,31 @@
+# Local-development override: publishes the ports docker-compose.yml keeps
+# internal-only (Postgres, Redis, Qdrant, agent-service) to the host.
+#
+# Needed for:
+#   - ingestion/ingest.py and ingestion/smoke_query.py (run from the host,
+#     talk to Qdrant directly)
+#   - poking at Postgres/Redis with a local client while debugging
+#   - curling the agent-service's /triage directly
+#
+# Usage:
+#   docker compose -f docker-compose.yml -f docker-compose.dev.yml up -d --build
+#
+# docker-compose.yml alone is the hardened configuration — the one a real
+# deployment (see AWS_DEPLOYMENT.md) should be based on.
+services:
+  postgres:
+    ports:
+      - "${POSTGRES_PORT:-5432}:5432"
+
+  redis:
+    ports:
+      - "${REDIS_PORT:-6379}:6379"
+
+  qdrant:
+    ports:
+      - "${QDRANT_HTTP_PORT:-6333}:6333"
+      - "${QDRANT_GRPC_PORT:-6334}:6334"
+
+  agent-service:
+    ports:
+      - "${AGENT_SERVICE_PORT:-8000}:8000"

@@ -139,10 +139,21 @@ nano .env    # paste in your real OPENAI_API_KEY, save (Ctrl+O, Enter, Ctrl+X)
 
 ## Step 6: Bring the stack up
 
+`docker-compose.yml` alone keeps Postgres/Redis/Qdrant/agent-service internal-only
+(`expose:`, not `ports:`) — the ingestion step below needs Qdrant reachable from the
+instance's own host, so bring the stack up with the dev override:
+
 ```bash
-docker compose up -d --build
+docker compose -f docker-compose.yml -f docker-compose.dev.yml up -d --build
 docker compose ps    # wait until all 8 services show "healthy" (builds take a few min on first run)
 ```
+
+This is still safe on a public box: the security group from Step 1 only allows inbound
+on 22/5173/8080/3000/9090, so the extra ports the dev override publishes (5432, 6379,
+6333, 8000) are unreachable from the internet regardless — they're only reachable from
+the instance's own localhost, which is what ingestion needs. If you want the fully
+hardened config (no dev override at all), skip this and instead run ingestion from a
+one-off container attached to `triagent-net` instead of from the instance's host.
 
 ## Step 7: One-time doc corpus ingestion
 

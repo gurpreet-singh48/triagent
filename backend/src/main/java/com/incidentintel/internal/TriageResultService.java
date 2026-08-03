@@ -3,107 +3,72 @@ package com.incidentintel.internal;
 import com.incidentintel.common.Decision;
 import com.incidentintel.common.IncidentNotFoundException;
 import com.incidentintel.common.IncidentStatus;
-import com.incidentintel.common.TicketStatus;
-import com.incidentintel.config.TriagentProperties;
 import com.incidentintel.incident.Incident;
 import com.incidentintel.incident.IncidentRepository;
 import com.incidentintel.ticket.Ticket;
 import com.incidentintel.ticket.TicketRepository;
-import com.incidentintel.ticket.TicketRetrievedDoc;
-import com.incidentintel.ticket.TicketRetrievedDocRepository;
+import org.springframework.dao.DataIntegrityViolationException;
 import org.springframework.stereotype.Service;
-import org.springframework.transaction.annotation.Transactional;
-
-import java.math.BigDecimal;
-import java.util.List;
 
 /**
  * Persists the agent-service's triage result. This is the callback target
- * described in PLAN.md's cross-service design — in Phase 2 it is only
- * reachable via manual curl (the agent service doesn't exist yet); from
- * Phase 3 onward the webhook handler calls the agent service, which calls
- * back here automatically.
+ * described in PLAN.md's cross-service design.
+ *
+ * Deliberately NOT itself {@code @Transactional}: the actual ticket INSERT
+ * (which can lose a race on the {@code uk_ticket_incident} unique
+ * constraint against a concurrent duplicate callback) lives in {@link
+ * TicketCreationTransaction}'s own transaction. If that method's
+ * transaction were the same one this method ran in, a constraint violation
+ * would leave the whole transaction/connection in Postgres's "current
+ * transaction is aborted" state, and the recovery lookup below would fail
+ * too instead of cleanly reading back the winner's ticket.
  */
 @Service
 public class TriageResultService {
 
     private final IncidentRepository incidentRepository;
     private final TicketRepository ticketRepository;
-    private final TicketRetrievedDocRepository retrievedDocRepository;
-    private final TriagentProperties properties;
+    private final TicketCreationTransaction ticketCreationTransaction;
 
     public TriageResultService(IncidentRepository incidentRepository, TicketRepository ticketRepository,
-                                TicketRetrievedDocRepository retrievedDocRepository, TriagentProperties properties) {
+                                TicketCreationTransaction ticketCreationTransaction) {
         this.incidentRepository = incidentRepository;
         this.ticketRepository = ticketRepository;
-        this.retrievedDocRepository = retrievedDocRepository;
-        this.properties = properties;
+        this.ticketCreationTransaction = ticketCreationTransaction;
     }
 
-    @Transactional
     public TriageResultResponse record(TriageResultRequest request) {
         Incident incident = incidentRepository.findById(request.incidentId())
                 .orElseThrow(() -> new IncidentNotFoundException(request.incidentId()));
 
+        // Idempotency: the agent-service may retry a callback (network blip
+        // after the first callback actually succeeded, at-least-once retry
+        // logic, etc). A second callback for the same incident must return
+        // the ticket already created, not create a second one.
+        var existingTicket = ticketRepository.findByIncidentId(incident.getId());
+        if (existingTicket.isPresent()) {
+            Ticket ticket = existingTicket.get();
+            return new TriageResultResponse(ticket.getId(), ticket.getStatus().name());
+        }
+
         if (Decision.FAILED.name().equalsIgnoreCase(request.decision())) {
-            incident.setStatus(IncidentStatus.FAILED);
-            incidentRepository.save(incident);
+            ticketCreationTransaction.markIncidentFailed(incident.getId());
             return new TriageResultResponse(null, IncidentStatus.FAILED.name());
         }
 
-        double confidence = request.confidence() != null ? request.confidence() : 0.0;
-        // Defense-in-depth: the backend recomputes the auto-vs-review split
-        // itself rather than trusting the agent's decision label outright.
-        TicketStatus ticketStatus = confidence >= properties.confidenceThreshold()
-                ? TicketStatus.OPEN
-                : TicketStatus.PENDING_REVIEW;
-
-        Ticket ticket = new Ticket();
-        ticket.setIncidentId(incident.getId());
-        ticket.setStatus(ticketStatus);
-        ticket.setPredictedTeam(request.predictedTeam());
-        ticket.setPredictedCategory(request.predictedCategory());
-        ticket.setPredictedSeverity(request.predictedSeverity());
-        ticket.setConfidenceScore(request.confidence() != null ? BigDecimal.valueOf(request.confidence()) : null);
-        ticket.setDecision(parseDecision(request.decision()));
-        ticket.setRationale(request.rationale());
-        ticket.setRedactedSummary(request.redactedSummary());
-        ticketRepository.save(ticket);
-
-        saveRetrievedDocs(ticket.getId(), request.retrievedDocs());
-
-        incident.setStatus(IncidentStatus.TRIAGED);
-        incidentRepository.save(incident);
-
-        return new TriageResultResponse(ticket.getId(), ticketStatus.name());
-    }
-
-    private void saveRetrievedDocs(java.util.UUID ticketId, List<TriageResultRequest.RetrievedDocDto> docs) {
-        if (docs == null) {
-            return;
-        }
-        for (int i = 0; i < docs.size(); i++) {
-            TriageResultRequest.RetrievedDocDto docDto = docs.get(i);
-            TicketRetrievedDoc doc = new TicketRetrievedDoc();
-            doc.setTicketId(ticketId);
-            doc.setDocId(docDto.docId());
-            doc.setDocTitle(docDto.title());
-            doc.setDocSourceType(docDto.sourceType());
-            doc.setScore(docDto.score() != null ? BigDecimal.valueOf(docDto.score()) : null);
-            doc.setSnippet(docDto.snippet());
-            doc.setRank(docDto.rank() != null ? docDto.rank() : i + 1);
-            retrievedDocRepository.save(doc);
-        }
-    }
-
-    private Decision parseDecision(String raw) {
-        if (raw == null) {
-            return null;
-        }
         try {
-            return Decision.valueOf(raw.toUpperCase());
-        } catch (IllegalArgumentException e) {
-            return null;
+            Ticket ticket = ticketCreationTransaction.createTicket(incident.getId(), request);
+            return new TriageResultResponse(ticket.getId(), ticket.getStatus().name());
+        } catch (DataIntegrityViolationException e) {
+            // Lost a race against a concurrent duplicate callback for the
+            // same incident_id — the unique constraint (uk_ticket_incident)
+            // caught what the findByIncidentId check above didn't. The
+            // other request's ticket is authoritative; return it. This read
+            // runs in a fresh transaction (this method isn't itself
+            // @Transactional), not the poisoned one that just failed.
+            return ticketRepository.findByIncidentId(incident.getId())
+                    .map(t -> new TriageResultResponse(t.getId(), t.getStatus().name()))
+                    .orElseThrow(() -> e);
         }
     }
 }

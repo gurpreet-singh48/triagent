@@ -16,15 +16,19 @@ import java.time.Duration;
  * application's Jackson ObjectMapper (snake_case naming strategy, see
  * application.yml). Building a bare RestClient.builder() here instead
  * would silently serialize requests in camelCase.
+ *
+ * Timeouts are configurable (triagent.agent-service.{connect,read}-timeout-ms)
+ * specifically so tests can exercise the timeout path in milliseconds
+ * instead of waiting out the real 30s production default.
  */
 @Configuration
 public class RestClientConfig {
 
     @Bean
-    public RestClientCustomizer agentServiceTimeoutCustomizer() {
+    public RestClientCustomizer agentServiceTimeoutCustomizer(TriagentProperties properties) {
         ClientHttpRequestFactorySettings settings = ClientHttpRequestFactorySettings.DEFAULTS
-                .withConnectTimeout(Duration.ofSeconds(5))
-                .withReadTimeout(Duration.ofSeconds(30));
+                .withConnectTimeout(Duration.ofMillis(properties.agentService().connectTimeoutMs()))
+                .withReadTimeout(Duration.ofMillis(properties.agentService().readTimeoutMs()));
         ClientHttpRequestFactory factory = ClientHttpRequestFactories.get(settings);
         return builder -> builder.requestFactory(factory);
     }

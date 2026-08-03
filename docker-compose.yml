@@ -18,8 +18,11 @@ services:
       POSTGRES_DB: ${POSTGRES_DB:-triagent}
       POSTGRES_USER: ${POSTGRES_USER:-triagent}
       POSTGRES_PASSWORD: ${POSTGRES_PASSWORD:-triagent}
-    ports:
-      - "${POSTGRES_PORT:-5432}:5432"
+    # Not published to the host: only other containers on triagent-net need
+    # to reach Postgres. Use docker-compose.dev.yml to publish it locally
+    # (e.g. to poke around with a SQL client) — see README.md.
+    expose:
+      - "5432"
     volumes:
       - postgres-data:/var/lib/postgresql/data
     healthcheck:
@@ -32,8 +35,9 @@ services:
 
   redis:
     image: redis:7-alpine
-    ports:
-      - "${REDIS_PORT:-6379}:6379"
+    # Not published to the host — see the postgres service's comment above.
+    expose:
+      - "6379"
     volumes:
       - redis-data:/data
     healthcheck:
@@ -46,9 +50,12 @@ services:
 
   qdrant:
     image: qdrant/qdrant:v1.12.4
-    ports:
-      - "${QDRANT_HTTP_PORT:-6333}:6333"
-      - "${QDRANT_GRPC_PORT:-6334}:6334"
+    # Not published to the host by default — ingestion/ingest.py runs from
+    # the host and needs direct access, so use docker-compose.dev.yml when
+    # running it. See README.md.
+    expose:
+      - "6333"
+      - "6334"
     volumes:
       - qdrant-data:/qdrant/storage
     healthcheck:
@@ -74,6 +81,7 @@ services:
       REDIS_PORT: 6379
       TRIAGE_CONFIDENCE_THRESHOLD: ${TRIAGE_CONFIDENCE_THRESHOLD:-0.9}
       AGENT_SERVICE_URL: ${AGENT_SERVICE_URL:-http://agent-service:8000}
+      INTERNAL_SERVICE_TOKEN: ${INTERNAL_SERVICE_TOKEN:-dev-local-internal-token}
       OPENAI_API_KEY: ${OPENAI_API_KEY}
       OPENAI_CHAT_MODEL: ${OPENAI_CHAT_MODEL:-gpt-4o-mini}
       OPENAI_EMBEDDING_MODEL: ${OPENAI_EMBEDDING_MODEL:-text-embedding-3-small}
@@ -113,8 +121,13 @@ services:
       QDRANT_COLLECTION: ${QDRANT_COLLECTION:-docs_corpus}
       TRIAGE_CONFIDENCE_THRESHOLD: ${TRIAGE_CONFIDENCE_THRESHOLD:-0.9}
       BACKEND_CALLBACK_URL: http://backend:8080
-    ports:
-      - "${AGENT_SERVICE_PORT:-8000}:8000"
+      INTERNAL_SERVICE_TOKEN: ${INTERNAL_SERVICE_TOKEN:-dev-local-internal-token}
+    # Not published to the host: the backend reaches it at
+    # http://agent-service:8000 over triagent-net; nothing external should
+    # be able to call /triage directly. Use docker-compose.dev.yml if you
+    # need to curl it directly while debugging.
+    expose:
+      - "8000"
     depends_on:
       qdrant:
         condition: service_healthy
