@@ -46,6 +46,7 @@ public abstract class AbstractIntegrationTest {
         // is needed to prove the timeout itself fires.
         registry.add("triagent.agent-service.connect-timeout-ms", () -> "2000");
         registry.add("triagent.agent-service.read-timeout-ms", () -> "2000");
+        registry.add("triagent.retry.poll-interval-ms", () -> "3600000");
         // Never a real key; nothing in this test suite exercises chat/RAG,
         // only webhook/callback/ticket endpoints — Spring AI's OpenAI
         // autoconfiguration just needs a non-blank string to construct its
