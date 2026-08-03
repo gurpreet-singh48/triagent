@@ -1,6 +1,6 @@
 # Build context is the repo root (see docker-compose.yml) so later phases
 # can COPY synthetic-generator/templates/ into this image too.
-FROM maven:3.9-eclipse-temurin-21 AS build
+FROM maven:3-eclipse-temurin-26 AS build
 WORKDIR /build
 COPY backend/pom.xml ./pom.xml
 RUN mvn -q -B dependency:go-offline
