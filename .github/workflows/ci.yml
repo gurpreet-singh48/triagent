@@ -24,6 +24,11 @@ jobs:
       # (Postgres + WireMock) need — no docker-in-docker setup required.
       - name: Run tests
         working-directory: backend
+        env:
+          # SampleIncidentService loads templates relative to the process
+          # working directory; the Docker image gets them at ./synthetic-generator
+          # (its WORKDIR is /app), but here CWD is backend/, one level below repo root.
+          SYNTHETIC_TEMPLATES_DIR: ../synthetic-generator/templates
         run: mvn -B test
 
       - name: Package

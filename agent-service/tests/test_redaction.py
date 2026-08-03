@@ -35,9 +35,11 @@ def test_redacts_jwt_looking_token():
 
 
 def test_redacts_generic_api_key_token():
-    text = "customer support pasted sk-abcdefghijklmnopqrstuvwx into the ticket by mistake."
+    # Deliberately not an "sk-" prefix: that shape trips gitleaks' OpenAI-key
+    # rule even though this is fake fixture data, not a real credential.
+    text = "customer support pasted ghp-abcdefghijklmnopqrstuvwx into the ticket by mistake."  # gitleaks:allow
     result = redact(text)
-    assert "sk-abcdefghijklmnopqrstuvwx" not in result
+    assert "ghp-abcdefghijklmnopqrstuvwx" not in result
     assert "[REDACTED_TOKEN]" in result
 
 
