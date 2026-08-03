@@ -7,7 +7,7 @@ RUN mvn -q -B dependency:go-offline
 COPY backend/src ./src
 RUN mvn -q -B -DskipTests package
 
-FROM eclipse-temurin:21-jre-alpine
+FROM eclipse-temurin:25-jre-alpine
 WORKDIR /app
 COPY --from=build /build/target/*.jar app.jar
 COPY synthetic-generator/templates ./synthetic-generator/templates
