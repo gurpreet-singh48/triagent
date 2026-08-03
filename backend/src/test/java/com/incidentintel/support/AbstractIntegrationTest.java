@@ -1,6 +1,7 @@
 package com.incidentintel.support;
 
 import com.github.tomakehurst.wiremock.WireMockServer;
+import com.github.tomakehurst.wiremock.client.WireMock;
 import com.github.tomakehurst.wiremock.core.WireMockConfiguration;
 import org.junit.jupiter.api.BeforeEach;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -29,6 +30,7 @@ public abstract class AbstractIntegrationTest {
         POSTGRES.start();
         REDIS.start();
         AGENT_SERVICE.start();
+        WireMock.configureFor("localhost", AGENT_SERVICE.port());
     }
 
     @DynamicPropertySource
