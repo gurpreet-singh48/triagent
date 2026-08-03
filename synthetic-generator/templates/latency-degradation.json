@@ -1,0 +1,13 @@
+{
+  "category": "latency-degradation",
+  "expected_team": "payment-service",
+  "expected_severity": "warning",
+  "component": "payment-service",
+  "group": "payments",
+  "source_prefix": "payment-service-prod",
+  "summary_template": "payment-service p95 latency degraded (p95_latency_seconds={p95_latency_seconds}, duration_minutes={duration_minutes})",
+  "fields": [
+    { "name": "p95_latency_seconds", "type": "float", "min": 1.6, "max": 4.5, "decimals": 1 },
+    { "name": "duration_minutes", "type": "int", "min": 10, "max": 30 }
+  ]
+}

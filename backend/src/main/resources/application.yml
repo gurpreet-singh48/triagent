@@ -1,0 +1,56 @@
+server:
+  port: ${BACKEND_PORT:8080}
+
+spring:
+  application:
+    name: triagent-backend
+  datasource:
+    url: jdbc:postgresql://${POSTGRES_HOST:localhost}:${POSTGRES_PORT:5432}/${POSTGRES_DB:triagent}
+    username: ${POSTGRES_USER:triagent}
+    password: ${POSTGRES_PASSWORD:triagent}
+  jpa:
+    hibernate:
+      ddl-auto: validate
+    open-in-view: false
+    properties:
+      hibernate:
+        format_sql: false
+  flyway:
+    enabled: true
+    locations: classpath:db/migration
+  data:
+    redis:
+      host: ${REDIS_HOST:localhost}
+      port: ${REDIS_PORT:6379}
+  jackson:
+    property-naming-strategy: SNAKE_CASE
+  ai:
+    openai:
+      api-key: ${OPENAI_API_KEY:}
+      chat:
+        options:
+          model: ${OPENAI_CHAT_MODEL:gpt-4o-mini}
+      embedding:
+        options:
+          model: ${OPENAI_EMBEDDING_MODEL:text-embedding-3-small}
+    vectorstore:
+      qdrant:
+        host: ${QDRANT_HOST:localhost}
+        port: ${QDRANT_GRPC_PORT:6334}
+        collection-name: ${QDRANT_COLLECTION:docs_corpus}
+        initialize-schema: false
+
+triagent:
+  confidence-threshold: ${TRIAGE_CONFIDENCE_THRESHOLD:0.9}
+  agent-service:
+    url: ${AGENT_SERVICE_URL:http://localhost:8000}
+  synthetic-templates-dir: ${SYNTHETIC_TEMPLATES_DIR:synthetic-generator/templates}
+
+management:
+  endpoints:
+    web:
+      exposure:
+        include: health,prometheus
+  endpoint:
+    health:
+      show-details: always

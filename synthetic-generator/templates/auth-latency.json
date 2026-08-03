@@ -1,0 +1,13 @@
+{
+  "category": "auth-latency",
+  "expected_team": "auth-service",
+  "expected_severity": "warning",
+  "component": "auth-service",
+  "group": "auth",
+  "source_prefix": "auth-service-prod",
+  "summary_template": "auth-service p95 latency elevated (p95_latency_ms={p95_latency_ms}, duration_minutes={duration_minutes})",
+  "fields": [
+    { "name": "p95_latency_ms", "type": "int", "min": 850, "max": 2500 },
+    { "name": "duration_minutes", "type": "int", "min": 10, "max": 25 }
+  ]
+}

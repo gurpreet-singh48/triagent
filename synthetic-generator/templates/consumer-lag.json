@@ -1,0 +1,13 @@
+{
+  "category": "consumer-lag",
+  "expected_team": "queue-consumer",
+  "expected_severity": "warning",
+  "component": "queue-consumer",
+  "group": "queues",
+  "source_prefix": "queue-consumer-prod",
+  "summary_template": "queue-consumer lag growing (lag_messages={lag_messages}, duration_minutes={duration_minutes})",
+  "fields": [
+    { "name": "lag_messages", "type": "int", "min": 11000, "max": 80000 },
+    { "name": "duration_minutes", "type": "int", "min": 10, "max": 40 }
+  ]
+}

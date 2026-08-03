@@ -1,0 +1,28 @@
+# Secrets
+.env
+
+# Java / Maven
+backend/target/
+*.class
+
+# Python
+**/__pycache__/
+*.pyc
+.venv/
+venv/
+
+# Node
+frontend/node_modules/
+frontend/dist/
+
+# Eval output
+eval/report/*.json
+eval/report/*.md
+eval/incidents.jsonl
+
+# OS
+.DS_Store
+
+# Editor
+.vscode/
+.idea/

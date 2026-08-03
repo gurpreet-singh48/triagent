@@ -1,0 +1,13 @@
+{
+  "category": "5xx-spike",
+  "expected_team": "payment-service",
+  "expected_severity": "critical",
+  "component": "payment-service",
+  "group": "payments",
+  "source_prefix": "payment-service-prod",
+  "summary_template": "payment-service returning elevated 5xx errors (error_rate={error_rate}, duration_minutes={duration_minutes})",
+  "fields": [
+    { "name": "error_rate", "type": "float", "min": 0.06, "max": 0.35, "decimals": 2 },
+    { "name": "duration_minutes", "type": "int", "min": 3, "max": 20 }
+  ]
+}

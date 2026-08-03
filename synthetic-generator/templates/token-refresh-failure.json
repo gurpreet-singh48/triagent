@@ -1,0 +1,13 @@
+{
+  "category": "token-refresh-failure",
+  "expected_team": "auth-service",
+  "expected_severity": "error",
+  "component": "auth-service",
+  "group": "auth",
+  "source_prefix": "auth-service-prod",
+  "summary_template": "auth-service refresh-token exchanges failing (failure_rate={failure_rate}, duration_minutes={duration_minutes})",
+  "fields": [
+    { "name": "failure_rate", "type": "float", "min": 0.11, "max": 0.45, "decimals": 2 },
+    { "name": "duration_minutes", "type": "int", "min": 5, "max": 15 }
+  ]
+}

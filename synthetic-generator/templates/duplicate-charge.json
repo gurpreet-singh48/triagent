@@ -1,0 +1,13 @@
+{
+  "category": "duplicate-charge",
+  "expected_team": "payment-service",
+  "expected_severity": "critical",
+  "component": "payment-service",
+  "group": "payments",
+  "source_prefix": "payment-service-prod",
+  "summary_template": "payment-service charging customers twice for the same order (duplicate_count={duplicate_count}, affected_customers={affected_customers})",
+  "fields": [
+    { "name": "duplicate_count", "type": "int", "min": 1, "max": 5 },
+    { "name": "affected_customers", "type": "int", "min": 1, "max": 8 }
+  ]
+}

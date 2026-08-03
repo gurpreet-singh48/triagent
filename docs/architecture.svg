@@ -1,0 +1,129 @@
+<svg viewBox="0 0 1200 600" xmlns="http://www.w3.org/2000/svg" font-family="Segoe UI, Helvetica, Arial, sans-serif">
+  <rect x="0" y="0" width="1200" height="600" fill="#ffffff"/>
+
+  <text x="600" y="28" text-anchor="middle" font-size="20" font-weight="700" fill="#111827">Triagent — Architecture</text>
+  <text x="600" y="47" text-anchor="middle" font-size="12" fill="#6b7280">Webhook &#8594; idempotency &#8594; agentic triage (LangGraph + Qdrant) &#8594; ticket, with RAG chat and observability</text>
+
+  <!-- ================= connectors (lines + arrowheads only; labels are drawn last, on top of boxes) ================= -->
+
+  <line x1="260" y1="175" x2="318" y2="175" stroke="#6b7280" stroke-width="2"/>
+  <polygon points="320,175 311,170 311,180" fill="#6b7280"/>
+
+  <line x1="262" y1="420" x2="318" y2="420" stroke="#6b7280" stroke-width="2"/>
+  <polygon points="320,420 311,415 311,425" fill="#6b7280"/>
+  <polygon points="260,420 269,415 269,425" fill="#6b7280"/>
+
+  <line x1="622" y1="180" x2="678" y2="180" stroke="#6b7280" stroke-width="2"/>
+  <polygon points="680,180 671,175 671,185" fill="#6b7280"/>
+
+  <line x1="678" y1="235" x2="622" y2="235" stroke="#6b7280" stroke-width="2"/>
+  <polygon points="620,235 629,230 629,240" fill="#6b7280"/>
+
+  <line x1="390" y1="460" x2="390" y2="488" stroke="#6b7280" stroke-width="2"/>
+  <polygon points="390,490 385,481 395,481" fill="#6b7280"/>
+
+  <line x1="550" y1="460" x2="550" y2="488" stroke="#6b7280" stroke-width="2"/>
+  <polygon points="550,490 545,481 555,481" fill="#6b7280"/>
+
+  <path d="M620,400 L690,400 L690,375 L708,375" fill="none" stroke="#6b7280" stroke-width="2"/>
+  <polygon points="710,375 701,370 701,380" fill="#6b7280"/>
+
+  <line x1="810" y1="290" x2="810" y2="338" stroke="#6b7280" stroke-width="2"/>
+  <polygon points="810,340 805,331 815,331" fill="#6b7280"/>
+
+  <path d="M470,140 L470,100 L1110,100 L1110,138" fill="none" stroke="#6b7280" stroke-width="2"/>
+  <polygon points="1110,140 1105,131 1115,131" fill="#6b7280"/>
+
+  <path d="M840,140 L840,117 L1080,117 L1080,138" fill="none" stroke="#6b7280" stroke-width="2"/>
+  <polygon points="1080,140 1075,131 1085,131" fill="#6b7280"/>
+
+  <line x1="1110" y1="210" x2="1110" y2="248" stroke="#6b7280" stroke-width="2"/>
+  <polygon points="1110,250 1105,241 1115,241" fill="#6b7280"/>
+
+  <!-- inner agent sub-node arrows -->
+  <line x1="757" y1="205" x2="770" y2="205" stroke="#7c3aed" stroke-width="1.5"/>
+  <polygon points="772,205 766,201 766,209" fill="#7c3aed"/>
+  <line x1="834" y1="205" x2="847" y2="205" stroke="#7c3aed" stroke-width="1.5"/>
+  <polygon points="849,205 843,201 843,209" fill="#7c3aed"/>
+  <line x1="911" y1="205" x2="924" y2="205" stroke="#7c3aed" stroke-width="1.5"/>
+  <polygon points="926,205 920,201 920,209" fill="#7c3aed"/>
+
+  <!-- ================= boxes ================= -->
+
+  <rect x="40" y="140" width="220" height="70" rx="10" fill="#f3f4f6" stroke="#6b7280" stroke-width="1.5"/>
+  <text x="150" y="170" text-anchor="middle" font-size="13" font-weight="700" fill="#111827">PagerDuty (or curl)</text>
+  <text x="150" y="188" text-anchor="middle" font-size="11" fill="#4b5563">webhook trigger</text>
+
+  <rect x="40" y="385" width="220" height="70" rx="10" fill="#ecfeff" stroke="#0891b2" stroke-width="1.5"/>
+  <text x="150" y="410" text-anchor="middle" font-size="13" font-weight="700" fill="#111827">React Frontend</text>
+  <text x="150" y="427" text-anchor="middle" font-size="11" fill="#4b5563">Dashboard · Ticket Detail</text>
+  <text x="150" y="441" text-anchor="middle" font-size="11" fill="#4b5563">Chat (streaming)</text>
+
+  <rect x="320" y="140" width="300" height="320" rx="10" fill="#eff6ff" stroke="#2563eb" stroke-width="1.5"/>
+  <text x="470" y="163" text-anchor="middle" font-size="14" font-weight="700" fill="#111827">Spring Boot Backend</text>
+  <text x="340" y="195" font-size="11.5" fill="#374151">• Webhook intake + idempotency</text>
+  <text x="340" y="218" font-size="11.5" fill="#374151">• Persist incident &#8594; call Agent Service</text>
+  <text x="340" y="241" font-size="11.5" fill="#374151">• Ticket API + human-in-the-loop review</text>
+  <text x="340" y="264" font-size="11.5" fill="#374151">• RAG Chat (SSE streaming)</text>
+  <line x1="335" y1="278" x2="605" y2="278" stroke="#dbeafe" stroke-width="1"/>
+  <text x="340" y="300" font-size="10.5" fill="#6b7280">Owns:</text>
+  <text x="340" y="317" font-size="10.5" fill="#6b7280">Postgres (incidents, tickets)</text>
+  <text x="340" y="333" font-size="10.5" fill="#6b7280">Redis (idempotency keys)</text>
+  <text x="340" y="349" font-size="10.5" fill="#6b7280">Qdrant (for RAG chat retrieval)</text>
+
+  <rect x="680" y="140" width="320" height="150" rx="10" fill="#f5f3ff" stroke="#7c3aed" stroke-width="1.5"/>
+  <text x="840" y="163" text-anchor="middle" font-size="14" font-weight="700" fill="#111827">Agent Service</text>
+  <text x="840" y="178" text-anchor="middle" font-size="11" fill="#5b21b6">FastAPI + LangGraph</text>
+
+  <rect x="695" y="185" width="62" height="40" rx="6" fill="#ede9fe" stroke="#7c3aed" stroke-width="1.2"/>
+  <text x="726" y="209" text-anchor="middle" font-size="10" fill="#4c1d95">Redact PII</text>
+
+  <rect x="772" y="185" width="62" height="40" rx="6" fill="#ede9fe" stroke="#7c3aed" stroke-width="1.2"/>
+  <text x="803" y="209" text-anchor="middle" font-size="10" fill="#4c1d95">Retrieve</text>
+
+  <rect x="849" y="185" width="62" height="40" rx="6" fill="#ede9fe" stroke="#7c3aed" stroke-width="1.2"/>
+  <text x="880" y="209" text-anchor="middle" font-size="10" fill="#4c1d95">Classify</text>
+
+  <rect x="926" y="185" width="62" height="40" rx="6" fill="#ede9fe" stroke="#7c3aed" stroke-width="1.2"/>
+  <text x="957" y="209" text-anchor="middle" font-size="10" fill="#4c1d95">Decide</text>
+
+  <text x="840" y="272" text-anchor="middle" font-size="10" fill="#6b7280">confidence &#8805; 0.9 &#8594; auto-ticket, else &#8594; human review</text>
+
+  <rect x="320" y="490" width="140" height="70" rx="10" fill="#f0fdf4" stroke="#16a34a" stroke-width="1.5"/>
+  <text x="390" y="518" text-anchor="middle" font-size="13" font-weight="700" fill="#111827">PostgreSQL</text>
+  <text x="390" y="536" text-anchor="middle" font-size="10.5" fill="#4b5563">incidents · tickets</text>
+
+  <rect x="480" y="490" width="140" height="70" rx="10" fill="#f0fdf4" stroke="#16a34a" stroke-width="1.5"/>
+  <text x="550" y="518" text-anchor="middle" font-size="13" font-weight="700" fill="#111827">Redis</text>
+  <text x="550" y="536" text-anchor="middle" font-size="10.5" fill="#4b5563">idempotency keys</text>
+  <text x="550" y="550" text-anchor="middle" font-size="10.5" fill="#4b5563">(24h TTL)</text>
+
+  <rect x="710" y="340" width="200" height="70" rx="10" fill="#f0fdf4" stroke="#16a34a" stroke-width="1.5"/>
+  <text x="810" y="365" text-anchor="middle" font-size="13" font-weight="700" fill="#111827">Qdrant</text>
+  <text x="810" y="382" text-anchor="middle" font-size="10.5" fill="#4b5563">docs_corpus</text>
+  <text x="810" y="396" text-anchor="middle" font-size="10.5" fill="#4b5563">RFCs · alert rules · Go source</text>
+
+  <rect x="1040" y="140" width="140" height="70" rx="10" fill="#fff7ed" stroke="#ea580c" stroke-width="1.5"/>
+  <text x="1110" y="168" text-anchor="middle" font-size="13" font-weight="700" fill="#111827">Prometheus</text>
+  <text x="1110" y="185" text-anchor="middle" font-size="10.5" fill="#4b5563">scrapes backend +</text>
+  <text x="1110" y="198" text-anchor="middle" font-size="10.5" fill="#4b5563">agent-service metrics</text>
+
+  <rect x="1040" y="250" width="140" height="70" rx="10" fill="#fff7ed" stroke="#ea580c" stroke-width="1.5"/>
+  <text x="1110" y="278" text-anchor="middle" font-size="13" font-weight="700" fill="#111827">Grafana</text>
+  <text x="1110" y="295" text-anchor="middle" font-size="10.5" fill="#4b5563">"Triagent Overview"</text>
+  <text x="1110" y="308" text-anchor="middle" font-size="10.5" fill="#4b5563">dashboard</text>
+
+  <!-- ================= connector labels (drawn last so they sit on top of every box) ================= -->
+
+  <text x="266" y="166" font-size="10" fill="#374151">webhook</text>
+  <text x="266" y="411" font-size="10" fill="#374151">REST/SSE</text>
+  <text x="630" y="172" font-size="10" fill="#374151">/triage</text>
+  <text x="628" y="252" font-size="10" fill="#374151">callback</text>
+  <text x="396" y="480" font-size="10" fill="#374151">JPA</text>
+  <text x="556" y="480" font-size="10" fill="#374151">SETNX</text>
+  <text x="628" y="393" font-size="10" fill="#374151">RAG retrieval</text>
+  <text x="816" y="320" font-size="10" fill="#374151">similarity search</text>
+  <text x="700" y="95" font-size="10" fill="#374151">metrics: triage_latency_seconds</text>
+  <text x="845" y="130" font-size="10" fill="#374151">metrics: langgraph_node_duration_seconds</text>
+  <text x="1116" y="233" font-size="10" fill="#374151">PromQL</text>
+</svg>

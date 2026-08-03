@@ -1,0 +1,13 @@
+{
+  "category": "retry-storm",
+  "expected_team": "queue-consumer",
+  "expected_severity": "error",
+  "component": "queue-consumer",
+  "group": "queues",
+  "source_prefix": "queue-consumer-prod",
+  "summary_template": "queue-consumer retrying messages at a sustained high rate (retry_rate_per_sec={retry_rate_per_sec}, duration_minutes={duration_minutes})",
+  "fields": [
+    { "name": "retry_rate_per_sec", "type": "int", "min": 55, "max": 300 },
+    { "name": "duration_minutes", "type": "int", "min": 5, "max": 20 }
+  ]
+}
