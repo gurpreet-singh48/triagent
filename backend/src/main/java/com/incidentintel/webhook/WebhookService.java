@@ -21,6 +21,7 @@ import org.springframework.web.client.ResourceAccessException;
 
 import java.time.Duration;
 import java.time.OffsetDateTime;
+import java.util.Optional;
 import java.util.UUID;
 import java.util.concurrent.ThreadLocalRandom;
 
@@ -42,6 +43,8 @@ public class WebhookService {
     private static final int MAX_ATTEMPTS = 3;
     private static final Duration BASE_BACKOFF = Duration.ofSeconds(30);
     private static final Duration MAX_BACKOFF = Duration.ofMinutes(5);
+    private static final int DUPLICATE_LOOKUP_ATTEMPTS = 50;
+    private static final Duration DUPLICATE_LOOKUP_DELAY = Duration.ofMillis(10);
 
     private final IncidentRepository incidentRepository;
     private final TicketRepository ticketRepository;
@@ -213,12 +216,34 @@ public class WebhookService {
         UUID existingId = idempotencyService.getExistingIncidentId(idempotencyKey)
                 .orElseThrow(() -> new IllegalStateException(
                         "idempotency key reserved but missing its value in Redis: " + idempotencyKey));
-        Incident existingIncident = incidentRepository.findById(existingId)
-                .orElseThrow(() -> new IllegalStateException(
-                        "Redis idempotency key points to a missing incident: " + existingId));
+        Incident existingIncident = awaitExistingIncident(existingId);
         UUID ticketId = ticketRepository.findByIncidentId(existingIncident.getId())
                 .map(Ticket::getId)
                 .orElse(null);
         return new WebhookResponse("duplicate", existingIncident.getId(), ticketId);
+    }
+
+    /**
+     * Redis reservation wins immediately, just before the winner inserts its
+     * incident row. A concurrent duplicate can therefore observe the Redis
+     * value a few milliseconds before PostgreSQL makes the row visible.
+     */
+    private Incident awaitExistingIncident(UUID existingId) {
+        for (int attempt = 1; attempt <= DUPLICATE_LOOKUP_ATTEMPTS; attempt++) {
+            Optional<Incident> incident = incidentRepository.findById(existingId);
+            if (incident.isPresent()) {
+                return incident.get();
+            }
+            if (attempt < DUPLICATE_LOOKUP_ATTEMPTS) {
+                try {
+                    Thread.sleep(DUPLICATE_LOOKUP_DELAY.toMillis());
+                } catch (InterruptedException e) {
+                    Thread.currentThread().interrupt();
+                    throw new IllegalStateException(
+                            "interrupted while waiting for reserved incident: " + existingId, e);
+                }
+            }
+        }
+        throw new IllegalStateException("Redis idempotency key points to a missing incident: " + existingId);
     }
 }

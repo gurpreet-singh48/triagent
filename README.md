@@ -244,9 +244,9 @@ full teardown checklist so nothing keeps billing afterward.
 
 ## Testing
 
-75 tests across all three services, all wired into CI (see the badge at the top):
+76 tests across all three services, all wired into CI (see the badge at the top):
 
-- **Backend (27, JUnit + Testcontainers + WireMock):** idempotency (concurrent duplicate
+- **Backend (28, JUnit + Testcontainers + WireMock):** idempotency (concurrent duplicate
   webhooks → one incident, one agent call), failed-insert reservation compensation,
   owner-safe Redis compare-and-delete, duplicate-callback recovery (concurrent
   callbacks racing on the DB unique constraint → both return the same ticket), the full
