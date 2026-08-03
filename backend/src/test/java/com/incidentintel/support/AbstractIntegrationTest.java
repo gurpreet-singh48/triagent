@@ -10,37 +10,24 @@ import org.springframework.test.context.DynamicPropertyRegistry;
 import org.springframework.test.context.DynamicPropertySource;
 import org.testcontainers.containers.GenericContainer;
 import org.testcontainers.containers.PostgreSQLContainer;
-import org.testcontainers.junit.jupiter.Container;
-import org.testcontainers.junit.jupiter.Testcontainers;
 import org.testcontainers.utility.DockerImageName;
 
-/**
- * Shared base for backend integration tests: real Postgres (Testcontainers,
- * Flyway runs the real migrations against it) and real Redis, so idempotency
- * and constraint behavior is tested against the actual infrastructure, not
- * mocks. The agent-service is stubbed with WireMock — a real classification
- * call would hit OpenAI, which is neither deterministic nor free.
- *
- * Containers are static (one per JVM, shared across all subclasses) so the
- * suite doesn't pay container-startup cost per test class.
- */
 @SpringBootTest(webEnvironment = SpringBootTest.WebEnvironment.RANDOM_PORT)
-@Testcontainers
 public abstract class AbstractIntegrationTest {
 
-    @Container
     static final PostgreSQLContainer<?> POSTGRES = new PostgreSQLContainer<>(DockerImageName.parse("postgres:16-alpine"))
             .withDatabaseName("triagent")
             .withUsername("triagent")
             .withPassword("triagent");
 
-    @Container
     static final GenericContainer<?> REDIS = new GenericContainer<>(DockerImageName.parse("redis:7-alpine"))
             .withExposedPorts(6379);
 
     protected static final WireMockServer AGENT_SERVICE = new WireMockServer(WireMockConfiguration.options().dynamicPort());
 
     static {
+        POSTGRES.start();
+        REDIS.start();
         AGENT_SERVICE.start();
     }
 
