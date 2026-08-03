@@ -1,4 +1,4 @@
-FROM node:20-slim AS build
+FROM node:26-slim AS build
 WORKDIR /build
 COPY frontend/package.json frontend/package-lock.json* ./
 RUN npm install
