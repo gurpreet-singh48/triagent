@@ -27,14 +27,11 @@ import static com.github.tomakehurst.wiremock.client.WireMock.urlEqualTo;
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.awaitility.Awaitility.await;
 
-/**
- * The dead-letter/retry state machine: RECEIVED -> TRIAGING -> RETRYING ->
- * {TRIAGED, FAILED}. Only transient failure categories (timeout/connection
- * error, 5xx) are retryable; a 4xx is permanent and goes straight to
- * FAILED. IncidentRetryScheduler is invoked directly here rather than
- * waiting out real backoff delays (attempt 1's backoff alone is ~30-40s).
- */
 class WebhookRetryTest extends AbstractIntegrationTest {
+
+    // Matches application.yml's `${INTERNAL_SERVICE_TOKEN:dev-local-internal-token}`
+    // default, which applies here since AbstractIntegrationTest doesn't override it.
+    private static final String VALID_TOKEN = "dev-local-internal-token";
 
     @Autowired
     private ObjectMapper objectMapper;
@@ -67,6 +64,21 @@ class WebhookRetryTest extends AbstractIntegrationTest {
         HttpHeaders headers = new HttpHeaders();
         headers.setContentType(MediaType.APPLICATION_JSON);
         return restTemplate.postForEntity("/api/webhooks/pagerduty", new HttpEntity<>(json, headers), String.class);
+    }
+
+    private void postTriageResultCallback(UUID incidentId) {
+        String json = """
+                {
+                  "incident_id": "%s", "decision": "AUTO_TICKET", "confidence": 0.95,
+                  "predicted_team": "payment-service", "predicted_category": "5xx-spike",
+                  "predicted_severity": "critical", "rationale": "elevated error rate matches known pattern",
+                  "redacted_summary": "payment-service 5xx spike", "retrieved_docs": []
+                }
+                """.formatted(incidentId);
+        HttpHeaders headers = new HttpHeaders();
+        headers.setContentType(MediaType.APPLICATION_JSON);
+        headers.set("X-Internal-Service-Token", VALID_TOKEN);
+        restTemplate.postForEntity("/api/internal/triage-results", new HttpEntity<>(json, headers), String.class);
     }
 
     private Incident awaitIncident(UUID id) {
@@ -138,12 +150,10 @@ class WebhookRetryTest extends AbstractIntegrationTest {
         UUID incidentId = createRetryingIncident(1);
         stubFor(post(urlEqualTo("/triage")).willReturn(aResponse()
                 .withHeader("Content-Type", "application/json")
-                .withBody("""
-                        {"status":"triaged","ticket_id":null,"decision":"AUTO_TICKET","confidence":0.95,
-                         "category":"5xx-spike","predicted_team":"payment-service"}
-                        """)));
+                .withBody("{\"status\":\"accepted\"}")));
 
         incidentRetryScheduler.retryDueIncidents();
+        postTriageResultCallback(incidentId);
 
         Incident incident = awaitIncidentStatus(incidentId, IncidentStatus.TRIAGED);
         assertThat(ticketRepository.findByIncidentId(incident.getId())).isPresent();
