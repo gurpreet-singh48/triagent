@@ -1,6 +1,6 @@
 # Build context is the repo root (see docker-compose.yml) so later phases
 # can COPY synthetic-generator/templates/ into this image too.
-FROM python:3.11-slim
+FROM python:3.14-slim
 WORKDIR /app
 COPY agent-service/requirements.txt ./requirements.txt
 RUN pip install --no-cache-dir -r requirements.txt
