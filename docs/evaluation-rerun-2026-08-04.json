@@ -1,0 +1,1665 @@
+{
+  "generated_at": "2026-08-03T18:52:15.836999+00:00",
+  "run_id": "2026-08-04-local-rerun",
+  "total_incidents": 60,
+  "responded_incidents": 60,
+  "unresponded_incidents": 0,
+  "scorable_incidents": 50,
+  "unknown_bucket_incidents": 10,
+  "accuracy": {
+    "team": 0.96,
+    "category": 0.92,
+    "severity": 0.94,
+    "exact_match": 0.9
+  },
+  "safety": {
+    "human_review_rate": 0.25,
+    "auto_ticket_count": 45,
+    "incorrect_auto_ticket_count": 4,
+    "incorrect_auto_ticket_rate": 0.08888888888888889,
+    "unknown_rejection_rate": 1.0
+  },
+  "threshold_calibration": [
+    {
+      "threshold": 0.85,
+      "auto_ticket_coverage": 0.94,
+      "incorrect_auto_ticket_rate": 0.0851063829787234,
+      "auto_ticket_count": 47,
+      "incorrect_auto_ticket_count": 4
+    },
+    {
+      "threshold": 0.9,
+      "auto_ticket_coverage": 0.9,
+      "incorrect_auto_ticket_rate": 0.08888888888888889,
+      "auto_ticket_count": 45,
+      "incorrect_auto_ticket_count": 4
+    },
+    {
+      "threshold": 0.95,
+      "auto_ticket_coverage": 0.06,
+      "incorrect_auto_ticket_rate": 0.0,
+      "auto_ticket_count": 3,
+      "incorrect_auto_ticket_count": 0
+    },
+    {
+      "threshold": 0.98,
+      "auto_ticket_coverage": 0.04,
+      "incorrect_auto_ticket_rate": 0.0,
+      "auto_ticket_count": 2,
+      "incorrect_auto_ticket_count": 0
+    }
+  ],
+  "latency_seconds": {
+    "p50": 2.439686250498198,
+    "p95": 3.5732870979001743,
+    "mean": 2.588730235383385,
+    "max": 7.0388013330011745
+  },
+  "cost": {
+    "chat_prompt_tokens": 60841.0,
+    "chat_completion_tokens": 6277.0,
+    "embedding_prompt_tokens": 2803.0,
+    "total_tokens": 69921.0,
+    "estimated_cost_usd": 0.012948409999999999,
+    "avg_tokens_per_incident": 1165.35,
+    "avg_cost_usd_per_incident": 0.0002158068333333333
+  },
+  "decision_breakdown": {
+    "AUTO_TICKET": 45,
+    "HUMAN_REVIEW": 15
+  },
+  "bucket_breakdown": {
+    "adversarial": {
+      "n": 10,
+      "exact_match": 0.8,
+      "human_review_rate": 0.1
+    },
+    "ambiguous": {
+      "n": 10,
+      "exact_match": 0.8,
+      "human_review_rate": 0.2
+    },
+    "auth-service": {
+      "n": 10,
+      "exact_match": 0.9,
+      "human_review_rate": 0.1
+    },
+    "payment-service": {
+      "n": 10,
+      "exact_match": 1.0,
+      "human_review_rate": 0.1
+    },
+    "queue-consumer": {
+      "n": 10,
+      "exact_match": 1.0,
+      "human_review_rate": 0.0
+    },
+    "unknown": {
+      "n": 10,
+      "exact_match": null,
+      "human_review_rate": 1.0
+    }
+  },
+  "rows": [
+    {
+      "id": "heldout-001",
+      "bucket": "payment-service",
+      "expected": {
+        "team": "payment-service",
+        "category": "duplicate-charge",
+        "severity": "critical"
+      },
+      "webhook_status": "processing",
+      "ticket_id": "95751850-8ad4-4944-8a6e-654e4f5badb7",
+      "latency_seconds": 7.0388013330011745,
+      "predicted": {
+        "team": "payment-service",
+        "category": "duplicate-charge",
+        "severity": "critical",
+        "confidence": 0.9,
+        "decision": "AUTO_TICKET",
+        "status": "OPEN"
+      },
+      "correct": {
+        "team": true,
+        "category": true,
+        "severity": true,
+        "all": true
+      }
+    },
+    {
+      "id": "heldout-002",
+      "bucket": "payment-service",
+      "expected": {
+        "team": "payment-service",
+        "category": "duplicate-charge",
+        "severity": "critical"
+      },
+      "webhook_status": "processing",
+      "ticket_id": "dc099796-8617-424f-af86-7d1edb53753e",
+      "latency_seconds": 3.1970783340002527,
+      "predicted": {
+        "team": "payment-service",
+        "category": "duplicate-charge",
+        "severity": "critical",
+        "confidence": 0.9,
+        "decision": "AUTO_TICKET",
+        "status": "OPEN"
+      },
+      "correct": {
+        "team": true,
+        "category": true,
+        "severity": true,
+        "all": true
+      }
+    },
+    {
+      "id": "heldout-003",
+      "bucket": "payment-service",
+      "expected": {
+        "team": "payment-service",
+        "category": "5xx-spike",
+        "severity": "critical"
+      },
+      "webhook_status": "processing",
+      "ticket_id": "eb473042-f51a-4ff4-8106-9f70265f0810",
+      "latency_seconds": 2.597567374999926,
+      "predicted": {
+        "team": "payment-service",
+        "category": "5xx-spike",
+        "severity": "critical",
+        "confidence": 0.9,
+        "decision": "AUTO_TICKET",
+        "status": "OPEN"
+      },
+      "correct": {
+        "team": true,
+        "category": true,
+        "severity": true,
+        "all": true
+      }
+    },
+    {
+      "id": "heldout-004",
+      "bucket": "payment-service",
+      "expected": {
+        "team": "payment-service",
+        "category": "5xx-spike",
+        "severity": "critical"
+      },
+      "webhook_status": "processing",
+      "ticket_id": "ad309923-b7bf-4de4-af06-34ebe097278e",
+      "latency_seconds": 3.322586249996675,
+      "predicted": {
+        "team": "payment-service",
+        "category": "5xx-spike",
+        "severity": "critical",
+        "confidence": 0.85,
+        "decision": "HUMAN_REVIEW",
+        "status": "PENDING_REVIEW"
+      },
+      "correct": {
+        "team": true,
+        "category": true,
+        "severity": true,
+        "all": true
+      }
+    },
+    {
+      "id": "heldout-005",
+      "bucket": "payment-service",
+      "expected": {
+        "team": "payment-service",
+        "category": "latency-degradation",
+        "severity": "warning"
+      },
+      "webhook_status": "processing",
+      "ticket_id": "fb056497-ab70-4beb-b935-0455b3bb46f8",
+      "latency_seconds": 2.3091099169978406,
+      "predicted": {
+        "team": "payment-service",
+        "category": "latency-degradation",
+        "severity": "warning",
+        "confidence": 0.9,
+        "decision": "AUTO_TICKET",
+        "status": "OPEN"
+      },
+      "correct": {
+        "team": true,
+        "category": true,
+        "severity": true,
+        "all": true
+      }
+    },
+    {
+      "id": "heldout-006",
+      "bucket": "payment-service",
+      "expected": {
+        "team": "payment-service",
+        "category": "latency-degradation",
+        "severity": "warning"
+      },
+      "webhook_status": "processing",
+      "ticket_id": "6e5f2077-3505-4402-aa23-0b4f43ca107c",
+      "latency_seconds": 1.9405612080008723,
+      "predicted": {
+        "team": "payment-service",
+        "category": "latency-degradation",
+        "severity": "warning",
+        "confidence": 0.9,
+        "decision": "AUTO_TICKET",
+        "status": "OPEN"
+      },
+      "correct": {
+        "team": true,
+        "category": true,
+        "severity": true,
+        "all": true
+      }
+    },
+    {
+      "id": "heldout-007",
+      "bucket": "payment-service",
+      "expected": {
+        "team": "payment-service",
+        "category": "5xx-spike",
+        "severity": "critical"
+      },
+      "webhook_status": "processing",
+      "ticket_id": "60b09345-2058-4352-bd2d-d9c12d6e1e36",
+      "latency_seconds": 2.3068500830049743,
+      "predicted": {
+        "team": "payment-service",
+        "category": "5xx-spike",
+        "severity": "critical",
+        "confidence": 0.9,
+        "decision": "AUTO_TICKET",
+        "status": "OPEN"
+      },
+      "correct": {
+        "team": true,
+        "category": true,
+        "severity": true,
+        "all": true
+      }
+    },
+    {
+      "id": "heldout-008",
+      "bucket": "payment-service",
+      "expected": {
+        "team": "payment-service",
+        "category": "duplicate-charge",
+        "severity": "critical"
+      },
+      "webhook_status": "processing",
+      "ticket_id": "43758f14-e309-49ff-8ad3-ae48feb37572",
+      "latency_seconds": 2.472111708004377,
+      "predicted": {
+        "team": "payment-service",
+        "category": "duplicate-charge",
+        "severity": "critical",
+        "confidence": 0.9,
+        "decision": "AUTO_TICKET",
+        "status": "OPEN"
+      },
+      "correct": {
+        "team": true,
+        "category": true,
+        "severity": true,
+        "all": true
+      }
+    },
+    {
+      "id": "heldout-009",
+      "bucket": "payment-service",
+      "expected": {
+        "team": "payment-service",
+        "category": "latency-degradation",
+        "severity": "warning"
+      },
+      "webhook_status": "processing",
+      "ticket_id": "01883096-53ad-4d78-a3b2-bcf016591f25",
+      "latency_seconds": 2.179077833003248,
+      "predicted": {
+        "team": "payment-service",
+        "category": "latency-degradation",
+        "severity": "warning",
+        "confidence": 0.9,
+        "decision": "AUTO_TICKET",
+        "status": "OPEN"
+      },
+      "correct": {
+        "team": true,
+        "category": true,
+        "severity": true,
+        "all": true
+      }
+    },
+    {
+      "id": "heldout-010",
+      "bucket": "payment-service",
+      "expected": {
+        "team": "payment-service",
+        "category": "5xx-spike",
+        "severity": "critical"
+      },
+      "webhook_status": "processing",
+      "ticket_id": "123940d5-3ca9-4bcf-8708-31564ea19746",
+      "latency_seconds": 2.381330791999062,
+      "predicted": {
+        "team": "payment-service",
+        "category": "5xx-spike",
+        "severity": "critical",
+        "confidence": 0.9,
+        "decision": "AUTO_TICKET",
+        "status": "OPEN"
+      },
+      "correct": {
+        "team": true,
+        "category": true,
+        "severity": true,
+        "all": true
+      }
+    },
+    {
+      "id": "heldout-011",
+      "bucket": "auth-service",
+      "expected": {
+        "team": "auth-service",
+        "category": "token-refresh-failure",
+        "severity": "error"
+      },
+      "webhook_status": "processing",
+      "ticket_id": "e238ea5a-3936-41e1-a7c9-68dcc9734105",
+      "latency_seconds": 2.291414874998736,
+      "predicted": {
+        "team": "auth-service",
+        "category": "token-refresh-failure",
+        "severity": "error",
+        "confidence": 0.9,
+        "decision": "AUTO_TICKET",
+        "status": "OPEN"
+      },
+      "correct": {
+        "team": true,
+        "category": true,
+        "severity": true,
+        "all": true
+      }
+    },
+    {
+      "id": "heldout-012",
+      "bucket": "auth-service",
+      "expected": {
+        "team": "auth-service",
+        "category": "token-refresh-failure",
+        "severity": "error"
+      },
+      "webhook_status": "processing",
+      "ticket_id": "e2071139-f6cb-4801-b947-29af2a7aab3a",
+      "latency_seconds": 3.5685935000001336,
+      "predicted": {
+        "team": "auth-service",
+        "category": "token-refresh-failure",
+        "severity": "error",
+        "confidence": 0.9,
+        "decision": "AUTO_TICKET",
+        "status": "OPEN"
+      },
+      "correct": {
+        "team": true,
+        "category": true,
+        "severity": true,
+        "all": true
+      }
+    },
+    {
+      "id": "heldout-013",
+      "bucket": "auth-service",
+      "expected": {
+        "team": "auth-service",
+        "category": "auth-latency",
+        "severity": "warning"
+      },
+      "webhook_status": "processing",
+      "ticket_id": "a7bb3ac1-01eb-46ab-855a-190e4f107677",
+      "latency_seconds": 2.262802416997147,
+      "predicted": {
+        "team": "auth-service",
+        "category": "auth-latency",
+        "severity": "warning",
+        "confidence": 1.0,
+        "decision": "AUTO_TICKET",
+        "status": "OPEN"
+      },
+      "correct": {
+        "team": true,
+        "category": true,
+        "severity": true,
+        "all": true
+      }
+    },
+    {
+      "id": "heldout-014",
+      "bucket": "auth-service",
+      "expected": {
+        "team": "auth-service",
+        "category": "auth-latency",
+        "severity": "warning"
+      },
+      "webhook_status": "processing",
+      "ticket_id": "d7e0f91e-dee2-4f86-a842-66e3f7954c28",
+      "latency_seconds": 3.0268831249995856,
+      "predicted": {
+        "team": "auth-service",
+        "category": "auth-latency",
+        "severity": "warning",
+        "confidence": 0.9,
+        "decision": "AUTO_TICKET",
+        "status": "OPEN"
+      },
+      "correct": {
+        "team": true,
+        "category": true,
+        "severity": true,
+        "all": true
+      }
+    },
+    {
+      "id": "heldout-015",
+      "bucket": "auth-service",
+      "expected": {
+        "team": "auth-service",
+        "category": "token-refresh-failure",
+        "severity": "error"
+      },
+      "webhook_status": "processing",
+      "ticket_id": "6afdf13c-127d-49be-b50c-19546c194495",
+      "latency_seconds": 4.022369083002559,
+      "predicted": {
+        "team": "auth-service",
+        "category": "token-refresh-failure",
+        "severity": "error",
+        "confidence": 0.9,
+        "decision": "AUTO_TICKET",
+        "status": "OPEN"
+      },
+      "correct": {
+        "team": true,
+        "category": true,
+        "severity": true,
+        "all": true
+      }
+    },
+    {
+      "id": "heldout-016",
+      "bucket": "auth-service",
+      "expected": {
+        "team": "auth-service",
+        "category": "token-refresh-failure",
+        "severity": "error"
+      },
+      "webhook_status": "processing",
+      "ticket_id": "b565bcf0-1fcf-44b4-9891-aa1caa3eb148",
+      "latency_seconds": 2.569157500001893,
+      "predicted": {
+        "team": "auth-service",
+        "category": "token-refresh-failure",
+        "severity": "error",
+        "confidence": 0.8,
+        "decision": "HUMAN_REVIEW",
+        "status": "PENDING_REVIEW"
+      },
+      "correct": {
+        "team": true,
+        "category": true,
+        "severity": true,
+        "all": true
+      }
+    },
+    {
+      "id": "heldout-017",
+      "bucket": "auth-service",
+      "expected": {
+        "team": "auth-service",
+        "category": "auth-latency",
+        "severity": "warning"
+      },
+      "webhook_status": "processing",
+      "ticket_id": "175a700d-d99b-4909-982b-8ba99cccdcd2",
+      "latency_seconds": 2.4671716670054593,
+      "predicted": {
+        "team": "auth-service",
+        "category": "auth-latency",
+        "severity": "warning",
+        "confidence": 0.9,
+        "decision": "AUTO_TICKET",
+        "status": "OPEN"
+      },
+      "correct": {
+        "team": true,
+        "category": true,
+        "severity": true,
+        "all": true
+      }
+    },
+    {
+      "id": "heldout-018",
+      "bucket": "auth-service",
+      "expected": {
+        "team": "auth-service",
+        "category": "token-refresh-failure",
+        "severity": "error"
+      },
+      "webhook_status": "processing",
+      "ticket_id": "99e3b614-6aec-4bbc-9ecd-1687eb7c23bb",
+      "latency_seconds": 2.631421375001082,
+      "predicted": {
+        "team": "auth-service",
+        "category": "token-refresh-failure",
+        "severity": "error",
+        "confidence": 0.9,
+        "decision": "AUTO_TICKET",
+        "status": "OPEN"
+      },
+      "correct": {
+        "team": true,
+        "category": true,
+        "severity": true,
+        "all": true
+      }
+    },
+    {
+      "id": "heldout-019",
+      "bucket": "auth-service",
+      "expected": {
+        "team": "auth-service",
+        "category": "auth-latency",
+        "severity": "warning"
+      },
+      "webhook_status": "processing",
+      "ticket_id": "88b372b8-dbab-428a-9469-9f2f1ac38492",
+      "latency_seconds": 3.1316971670021303,
+      "predicted": {
+        "team": "auth-service",
+        "category": "token-refresh-failure",
+        "severity": "error",
+        "confidence": 0.9,
+        "decision": "AUTO_TICKET",
+        "status": "OPEN"
+      },
+      "correct": {
+        "team": true,
+        "category": false,
+        "severity": false,
+        "all": false
+      }
+    },
+    {
+      "id": "heldout-020",
+      "bucket": "auth-service",
+      "expected": {
+        "team": "auth-service",
+        "category": "token-refresh-failure",
+        "severity": "error"
+      },
+      "webhook_status": "processing",
+      "ticket_id": "9c35df27-3581-4984-8268-00e89e176555",
+      "latency_seconds": 2.5306185000008554,
+      "predicted": {
+        "team": "auth-service",
+        "category": "token-refresh-failure",
+        "severity": "error",
+        "confidence": 0.9,
+        "decision": "AUTO_TICKET",
+        "status": "OPEN"
+      },
+      "correct": {
+        "team": true,
+        "category": true,
+        "severity": true,
+        "all": true
+      }
+    },
+    {
+      "id": "heldout-021",
+      "bucket": "queue-consumer",
+      "expected": {
+        "team": "queue-consumer",
+        "category": "retry-storm",
+        "severity": "error"
+      },
+      "webhook_status": "processing",
+      "ticket_id": "1a18b1cc-34a2-41d5-aaa9-e571306b56e6",
+      "latency_seconds": 2.667819791000511,
+      "predicted": {
+        "team": "queue-consumer",
+        "category": "retry-storm",
+        "severity": "error",
+        "confidence": 0.9,
+        "decision": "AUTO_TICKET",
+        "status": "OPEN"
+      },
+      "correct": {
+        "team": true,
+        "category": true,
+        "severity": true,
+        "all": true
+      }
+    },
+    {
+      "id": "heldout-022",
+      "bucket": "queue-consumer",
+      "expected": {
+        "team": "queue-consumer",
+        "category": "consumer-lag",
+        "severity": "warning"
+      },
+      "webhook_status": "processing",
+      "ticket_id": "573851b6-feb3-4f10-b867-93b845488a8a",
+      "latency_seconds": 2.783085499999288,
+      "predicted": {
+        "team": "queue-consumer",
+        "category": "consumer-lag",
+        "severity": "warning",
+        "confidence": 0.9,
+        "decision": "AUTO_TICKET",
+        "status": "OPEN"
+      },
+      "correct": {
+        "team": true,
+        "category": true,
+        "severity": true,
+        "all": true
+      }
+    },
+    {
+      "id": "heldout-023",
+      "bucket": "queue-consumer",
+      "expected": {
+        "team": "queue-consumer",
+        "category": "dlq-spike",
+        "severity": "critical"
+      },
+      "webhook_status": "processing",
+      "ticket_id": "a53606c3-fd9f-436e-bf09-7520f001d240",
+      "latency_seconds": 2.822620667000592,
+      "predicted": {
+        "team": "queue-consumer",
+        "category": "dlq-spike",
+        "severity": "critical",
+        "confidence": 0.9,
+        "decision": "AUTO_TICKET",
+        "status": "OPEN"
+      },
+      "correct": {
+        "team": true,
+        "category": true,
+        "severity": true,
+        "all": true
+      }
+    },
+    {
+      "id": "heldout-024",
+      "bucket": "queue-consumer",
+      "expected": {
+        "team": "queue-consumer",
+        "category": "dlq-spike",
+        "severity": "critical"
+      },
+      "webhook_status": "processing",
+      "ticket_id": "f5efb6bc-331b-4e52-9188-2c9d7953a09c",
+      "latency_seconds": 2.8758356670005014,
+      "predicted": {
+        "team": "queue-consumer",
+        "category": "dlq-spike",
+        "severity": "critical",
+        "confidence": 0.9,
+        "decision": "AUTO_TICKET",
+        "status": "OPEN"
+      },
+      "correct": {
+        "team": true,
+        "category": true,
+        "severity": true,
+        "all": true
+      }
+    },
+    {
+      "id": "heldout-025",
+      "bucket": "queue-consumer",
+      "expected": {
+        "team": "queue-consumer",
+        "category": "consumer-lag",
+        "severity": "warning"
+      },
+      "webhook_status": "processing",
+      "ticket_id": "3618664a-f1dd-47f4-91b7-b4d1002daba8",
+      "latency_seconds": 1.89841150000575,
+      "predicted": {
+        "team": "queue-consumer",
+        "category": "consumer-lag",
+        "severity": "warning",
+        "confidence": 0.95,
+        "decision": "AUTO_TICKET",
+        "status": "OPEN"
+      },
+      "correct": {
+        "team": true,
+        "category": true,
+        "severity": true,
+        "all": true
+      }
+    },
+    {
+      "id": "heldout-026",
+      "bucket": "queue-consumer",
+      "expected": {
+        "team": "queue-consumer",
+        "category": "retry-storm",
+        "severity": "error"
+      },
+      "webhook_status": "processing",
+      "ticket_id": "57fa632b-2f7c-49cb-8765-6bef21abe131",
+      "latency_seconds": 2.5135040000022855,
+      "predicted": {
+        "team": "queue-consumer",
+        "category": "retry-storm",
+        "severity": "error",
+        "confidence": 0.9,
+        "decision": "AUTO_TICKET",
+        "status": "OPEN"
+      },
+      "correct": {
+        "team": true,
+        "category": true,
+        "severity": true,
+        "all": true
+      }
+    },
+    {
+      "id": "heldout-027",
+      "bucket": "queue-consumer",
+      "expected": {
+        "team": "queue-consumer",
+        "category": "consumer-lag",
+        "severity": "warning"
+      },
+      "webhook_status": "processing",
+      "ticket_id": "4878a1c3-bbf0-4d39-8063-69b8ca053fd7",
+      "latency_seconds": 2.248215874999005,
+      "predicted": {
+        "team": "queue-consumer",
+        "category": "consumer-lag",
+        "severity": "warning",
+        "confidence": 0.9,
+        "decision": "AUTO_TICKET",
+        "status": "OPEN"
+      },
+      "correct": {
+        "team": true,
+        "category": true,
+        "severity": true,
+        "all": true
+      }
+    },
+    {
+      "id": "heldout-028",
+      "bucket": "queue-consumer",
+      "expected": {
+        "team": "queue-consumer",
+        "category": "dlq-spike",
+        "severity": "critical"
+      },
+      "webhook_status": "processing",
+      "ticket_id": "3186d69c-9385-4bba-861d-3ad33a2cfb65",
+      "latency_seconds": 2.398428458000126,
+      "predicted": {
+        "team": "queue-consumer",
+        "category": "dlq-spike",
+        "severity": "critical",
+        "confidence": 0.9,
+        "decision": "AUTO_TICKET",
+        "status": "OPEN"
+      },
+      "correct": {
+        "team": true,
+        "category": true,
+        "severity": true,
+        "all": true
+      }
+    },
+    {
+      "id": "heldout-029",
+      "bucket": "queue-consumer",
+      "expected": {
+        "team": "queue-consumer",
+        "category": "retry-storm",
+        "severity": "error"
+      },
+      "webhook_status": "processing",
+      "ticket_id": "2d494a03-ef9a-4fce-a0e2-b0f5491e593e",
+      "latency_seconds": 2.404666290996829,
+      "predicted": {
+        "team": "queue-consumer",
+        "category": "retry-storm",
+        "severity": "error",
+        "confidence": 0.9,
+        "decision": "AUTO_TICKET",
+        "status": "OPEN"
+      },
+      "correct": {
+        "team": true,
+        "category": true,
+        "severity": true,
+        "all": true
+      }
+    },
+    {
+      "id": "heldout-030",
+      "bucket": "queue-consumer",
+      "expected": {
+        "team": "queue-consumer",
+        "category": "consumer-lag",
+        "severity": "warning"
+      },
+      "webhook_status": "processing",
+      "ticket_id": "951cf58a-4312-4629-a720-2c330c47a882",
+      "latency_seconds": 2.1963737909973133,
+      "predicted": {
+        "team": "queue-consumer",
+        "category": "consumer-lag",
+        "severity": "warning",
+        "confidence": 0.9,
+        "decision": "AUTO_TICKET",
+        "status": "OPEN"
+      },
+      "correct": {
+        "team": true,
+        "category": true,
+        "severity": true,
+        "all": true
+      }
+    },
+    {
+      "id": "heldout-031",
+      "bucket": "ambiguous",
+      "expected": {
+        "team": "auth-service",
+        "category": "token-refresh-failure",
+        "severity": "error"
+      },
+      "webhook_status": "processing",
+      "ticket_id": "cb5e9fa1-404c-4efb-ad4e-907b57128433",
+      "latency_seconds": 2.3084799159987597,
+      "predicted": {
+        "team": "auth-service",
+        "category": "token-refresh-failure",
+        "severity": "error",
+        "confidence": 0.8,
+        "decision": "HUMAN_REVIEW",
+        "status": "PENDING_REVIEW"
+      },
+      "correct": {
+        "team": true,
+        "category": true,
+        "severity": true,
+        "all": true
+      }
+    },
+    {
+      "id": "heldout-032",
+      "bucket": "ambiguous",
+      "expected": {
+        "team": "queue-consumer",
+        "category": "dlq-spike",
+        "severity": "critical"
+      },
+      "webhook_status": "processing",
+      "ticket_id": "0d92f5c5-aa80-4fb0-9628-7430ddd0b61d",
+      "latency_seconds": 2.1109499579979456,
+      "predicted": {
+        "team": "queue-consumer",
+        "category": "dlq-spike",
+        "severity": "critical",
+        "confidence": 1.0,
+        "decision": "AUTO_TICKET",
+        "status": "OPEN"
+      },
+      "correct": {
+        "team": true,
+        "category": true,
+        "severity": true,
+        "all": true
+      }
+    },
+    {
+      "id": "heldout-033",
+      "bucket": "ambiguous",
+      "expected": {
+        "team": "auth-service",
+        "category": "token-refresh-failure",
+        "severity": "error"
+      },
+      "webhook_status": "processing",
+      "ticket_id": "1fe6b4aa-db36-4ffd-9e3c-1c37d1fbba65",
+      "latency_seconds": 2.176651125002536,
+      "predicted": {
+        "team": "auth-service",
+        "category": "token-refresh-failure",
+        "severity": "error",
+        "confidence": 0.85,
+        "decision": "HUMAN_REVIEW",
+        "status": "PENDING_REVIEW"
+      },
+      "correct": {
+        "team": true,
+        "category": true,
+        "severity": true,
+        "all": true
+      }
+    },
+    {
+      "id": "heldout-034",
+      "bucket": "ambiguous",
+      "expected": {
+        "team": "queue-consumer",
+        "category": "consumer-lag",
+        "severity": "warning"
+      },
+      "webhook_status": "processing",
+      "ticket_id": "e48962ac-da59-4011-a2a5-70d399e84971",
+      "latency_seconds": 1.9510941249973257,
+      "predicted": {
+        "team": "payment-service",
+        "category": "latency-degradation",
+        "severity": "warning",
+        "confidence": 0.9,
+        "decision": "AUTO_TICKET",
+        "status": "OPEN"
+      },
+      "correct": {
+        "team": false,
+        "category": false,
+        "severity": true,
+        "all": false
+      }
+    },
+    {
+      "id": "heldout-035",
+      "bucket": "ambiguous",
+      "expected": {
+        "team": "auth-service",
+        "category": "auth-latency",
+        "severity": "warning"
+      },
+      "webhook_status": "processing",
+      "ticket_id": "e3ef2d8f-20e3-4487-82ae-98c33496c68c",
+      "latency_seconds": 2.2337650420013233,
+      "predicted": {
+        "team": "payment-service",
+        "category": "latency-degradation",
+        "severity": "warning",
+        "confidence": 0.9,
+        "decision": "AUTO_TICKET",
+        "status": "OPEN"
+      },
+      "correct": {
+        "team": false,
+        "category": false,
+        "severity": true,
+        "all": false
+      }
+    },
+    {
+      "id": "heldout-036",
+      "bucket": "ambiguous",
+      "expected": {
+        "team": "payment-service",
+        "category": "5xx-spike",
+        "severity": "critical"
+      },
+      "webhook_status": "processing",
+      "ticket_id": "24af28ed-a8dc-4089-a13b-69d62404a040",
+      "latency_seconds": 2.702192415999889,
+      "predicted": {
+        "team": "payment-service",
+        "category": "5xx-spike",
+        "severity": "critical",
+        "confidence": 0.9,
+        "decision": "AUTO_TICKET",
+        "status": "OPEN"
+      },
+      "correct": {
+        "team": true,
+        "category": true,
+        "severity": true,
+        "all": true
+      }
+    },
+    {
+      "id": "heldout-037",
+      "bucket": "ambiguous",
+      "expected": {
+        "team": "auth-service",
+        "category": "auth-latency",
+        "severity": "warning"
+      },
+      "webhook_status": "processing",
+      "ticket_id": "54b0e232-4e94-4614-82ba-ef9fd4b17e7f",
+      "latency_seconds": 2.4292405839951243,
+      "predicted": {
+        "team": "auth-service",
+        "category": "auth-latency",
+        "severity": "warning",
+        "confidence": 0.9,
+        "decision": "AUTO_TICKET",
+        "status": "OPEN"
+      },
+      "correct": {
+        "team": true,
+        "category": true,
+        "severity": true,
+        "all": true
+      }
+    },
+    {
+      "id": "heldout-038",
+      "bucket": "ambiguous",
+      "expected": {
+        "team": "queue-consumer",
+        "category": "dlq-spike",
+        "severity": "critical"
+      },
+      "webhook_status": "processing",
+      "ticket_id": "cc717a2d-ef07-4f4a-82f5-1903dbf37999",
+      "latency_seconds": 2.7827362500029267,
+      "predicted": {
+        "team": "queue-consumer",
+        "category": "dlq-spike",
+        "severity": "critical",
+        "confidence": 0.9,
+        "decision": "AUTO_TICKET",
+        "status": "OPEN"
+      },
+      "correct": {
+        "team": true,
+        "category": true,
+        "severity": true,
+        "all": true
+      }
+    },
+    {
+      "id": "heldout-039",
+      "bucket": "ambiguous",
+      "expected": {
+        "team": "payment-service",
+        "category": "5xx-spike",
+        "severity": "critical"
+      },
+      "webhook_status": "processing",
+      "ticket_id": "6493a270-9fae-403a-839f-593505b9bfed",
+      "latency_seconds": 2.5032201249996433,
+      "predicted": {
+        "team": "payment-service",
+        "category": "5xx-spike",
+        "severity": "critical",
+        "confidence": 0.9,
+        "decision": "AUTO_TICKET",
+        "status": "OPEN"
+      },
+      "correct": {
+        "team": true,
+        "category": true,
+        "severity": true,
+        "all": true
+      }
+    },
+    {
+      "id": "heldout-040",
+      "bucket": "ambiguous",
+      "expected": {
+        "team": "payment-service",
+        "category": "duplicate-charge",
+        "severity": "critical"
+      },
+      "webhook_status": "processing",
+      "ticket_id": "4437afa7-598e-4698-8b0d-653c204ab8e8",
+      "latency_seconds": 2.8835926250030752,
+      "predicted": {
+        "team": "payment-service",
+        "category": "duplicate-charge",
+        "severity": "critical",
+        "confidence": 0.9,
+        "decision": "AUTO_TICKET",
+        "status": "OPEN"
+      },
+      "correct": {
+        "team": true,
+        "category": true,
+        "severity": true,
+        "all": true
+      }
+    },
+    {
+      "id": "heldout-041",
+      "bucket": "unknown",
+      "expected": {
+        "team": null,
+        "category": null,
+        "severity": null
+      },
+      "webhook_status": "processing",
+      "ticket_id": "2ba0bd72-0002-4248-a11e-f184069eeabb",
+      "latency_seconds": 2.3723632499968517,
+      "predicted": {
+        "team": "none",
+        "category": "none",
+        "severity": "none",
+        "confidence": 0.1,
+        "decision": "HUMAN_REVIEW",
+        "status": "PENDING_REVIEW"
+      },
+      "correct": {
+        "team": false,
+        "category": false,
+        "severity": false,
+        "all": false
+      }
+    },
+    {
+      "id": "heldout-042",
+      "bucket": "unknown",
+      "expected": {
+        "team": null,
+        "category": null,
+        "severity": null
+      },
+      "webhook_status": "processing",
+      "ticket_id": "5e145e06-2194-4db1-86e4-6e149f07b800",
+      "latency_seconds": 2.4620431669973186,
+      "predicted": {
+        "team": "auth-service",
+        "category": "5xx-spike",
+        "severity": "warning",
+        "confidence": 0.6,
+        "decision": "HUMAN_REVIEW",
+        "status": "PENDING_REVIEW"
+      },
+      "correct": {
+        "team": false,
+        "category": false,
+        "severity": false,
+        "all": false
+      }
+    },
+    {
+      "id": "heldout-043",
+      "bucket": "unknown",
+      "expected": {
+        "team": null,
+        "category": null,
+        "severity": null
+      },
+      "webhook_status": "processing",
+      "ticket_id": "581da50a-a89e-4a18-91c6-88ea7839df80",
+      "latency_seconds": 2.0397427500065533,
+      "predicted": {
+        "team": "payment-service",
+        "category": "duplicate-charge",
+        "severity": "critical",
+        "confidence": 0.7,
+        "decision": "HUMAN_REVIEW",
+        "status": "PENDING_REVIEW"
+      },
+      "correct": {
+        "team": false,
+        "category": false,
+        "severity": false,
+        "all": false
+      }
+    },
+    {
+      "id": "heldout-044",
+      "bucket": "unknown",
+      "expected": {
+        "team": null,
+        "category": null,
+        "severity": null
+      },
+      "webhook_status": "processing",
+      "ticket_id": "4e9eb3ad-22f6-4182-a8f7-83bffaec27f7",
+      "latency_seconds": 2.4860455410016584,
+      "predicted": {
+        "team": "auth-service",
+        "category": "token-refresh-failure",
+        "severity": "error",
+        "confidence": 0.7,
+        "decision": "HUMAN_REVIEW",
+        "status": "PENDING_REVIEW"
+      },
+      "correct": {
+        "team": false,
+        "category": false,
+        "severity": false,
+        "all": false
+      }
+    },
+    {
+      "id": "heldout-045",
+      "bucket": "unknown",
+      "expected": {
+        "team": null,
+        "category": null,
+        "severity": null
+      },
+      "webhook_status": "processing",
+      "ticket_id": "fee2e1b1-9d3c-4663-ab15-24713e375faf",
+      "latency_seconds": 2.078106916997058,
+      "predicted": {
+        "team": "auth-service",
+        "category": "token-refresh-failure",
+        "severity": "error",
+        "confidence": 0.7,
+        "decision": "HUMAN_REVIEW",
+        "status": "PENDING_REVIEW"
+      },
+      "correct": {
+        "team": false,
+        "category": false,
+        "severity": false,
+        "all": false
+      }
+    },
+    {
+      "id": "heldout-046",
+      "bucket": "unknown",
+      "expected": {
+        "team": null,
+        "category": null,
+        "severity": null
+      },
+      "webhook_status": "processing",
+      "ticket_id": "89d308b3-7b9d-48d0-b61c-fdf2205c5450",
+      "latency_seconds": 2.450131917001272,
+      "predicted": {
+        "team": "queue-consumer",
+        "category": "consumer-lag",
+        "severity": "warning",
+        "confidence": 0.8,
+        "decision": "HUMAN_REVIEW",
+        "status": "PENDING_REVIEW"
+      },
+      "correct": {
+        "team": false,
+        "category": false,
+        "severity": false,
+        "all": false
+      }
+    },
+    {
+      "id": "heldout-047",
+      "bucket": "unknown",
+      "expected": {
+        "team": null,
+        "category": null,
+        "severity": null
+      },
+      "webhook_status": "processing",
+      "ticket_id": "5e3fdc74-61a4-4710-9e7b-9641e7e457c3",
+      "latency_seconds": 2.1062132499937434,
+      "predicted": {
+        "team": "platform / on-call",
+        "category": "data-theft",
+        "severity": "critical",
+        "confidence": 0.6,
+        "decision": "HUMAN_REVIEW",
+        "status": "PENDING_REVIEW"
+      },
+      "correct": {
+        "team": false,
+        "category": false,
+        "severity": false,
+        "all": false
+      }
+    },
+    {
+      "id": "heldout-048",
+      "bucket": "unknown",
+      "expected": {
+        "team": null,
+        "category": null,
+        "severity": null
+      },
+      "webhook_status": "processing",
+      "ticket_id": "95e99dba-c585-442a-b64f-e36e725c7ddf",
+      "latency_seconds": 2.364067750000686,
+      "predicted": {
+        "team": "auth-service",
+        "category": "info",
+        "severity": "info",
+        "confidence": 0.7,
+        "decision": "HUMAN_REVIEW",
+        "status": "PENDING_REVIEW"
+      },
+      "correct": {
+        "team": false,
+        "category": false,
+        "severity": false,
+        "all": false
+      }
+    },
+    {
+      "id": "heldout-049",
+      "bucket": "unknown",
+      "expected": {
+        "team": null,
+        "category": null,
+        "severity": null
+      },
+      "webhook_status": "processing",
+      "ticket_id": "b6fd1630-73c2-49a7-a425-7d685446d061",
+      "latency_seconds": 2.2427167920031934,
+      "predicted": {
+        "team": "auth-service",
+        "category": "domain-expiration-reminder",
+        "severity": "warning",
+        "confidence": 0.7,
+        "decision": "HUMAN_REVIEW",
+        "status": "PENDING_REVIEW"
+      },
+      "correct": {
+        "team": false,
+        "category": false,
+        "severity": false,
+        "all": false
+      }
+    },
+    {
+      "id": "heldout-050",
+      "bucket": "unknown",
+      "expected": {
+        "team": null,
+        "category": null,
+        "severity": null
+      },
+      "webhook_status": "processing",
+      "ticket_id": "cf2a4409-b005-4633-a8e5-0b6335598e77",
+      "latency_seconds": 2.4847848749996047,
+      "predicted": {
+        "team": "payment-service",
+        "category": "info",
+        "severity": "info",
+        "confidence": 0.85,
+        "decision": "HUMAN_REVIEW",
+        "status": "PENDING_REVIEW"
+      },
+      "correct": {
+        "team": false,
+        "category": false,
+        "severity": false,
+        "all": false
+      }
+    },
+    {
+      "id": "heldout-051",
+      "bucket": "adversarial",
+      "expected": {
+        "team": "payment-service",
+        "category": "5xx-spike",
+        "severity": "critical"
+      },
+      "webhook_status": "processing",
+      "ticket_id": "a0f219a8-1ba1-4151-bfe3-c74e640e6a17",
+      "latency_seconds": 3.0505257499971776,
+      "predicted": {
+        "team": "payment-service",
+        "category": "5xx-spike",
+        "severity": "critical",
+        "confidence": 0.9,
+        "decision": "AUTO_TICKET",
+        "status": "OPEN"
+      },
+      "correct": {
+        "team": true,
+        "category": true,
+        "severity": true,
+        "all": true
+      }
+    },
+    {
+      "id": "heldout-052",
+      "bucket": "adversarial",
+      "expected": {
+        "team": "payment-service",
+        "category": "5xx-spike",
+        "severity": "critical"
+      },
+      "webhook_status": "processing",
+      "ticket_id": "8e5bc892-e36f-49c2-8515-b0e6ddb17797",
+      "latency_seconds": 2.091672999995353,
+      "predicted": {
+        "team": "payment-service",
+        "category": "5xx-spike",
+        "severity": "critical",
+        "confidence": 0.9,
+        "decision": "AUTO_TICKET",
+        "status": "OPEN"
+      },
+      "correct": {
+        "team": true,
+        "category": true,
+        "severity": true,
+        "all": true
+      }
+    },
+    {
+      "id": "heldout-053",
+      "bucket": "adversarial",
+      "expected": {
+        "team": "payment-service",
+        "category": "5xx-spike",
+        "severity": "critical"
+      },
+      "webhook_status": "processing",
+      "ticket_id": "41001a0e-cdb3-4c81-ae3e-c76dd85a8a7d",
+      "latency_seconds": 2.34691762500006,
+      "predicted": {
+        "team": "payment-service",
+        "category": "5xx-spike",
+        "severity": "critical",
+        "confidence": 0.9,
+        "decision": "AUTO_TICKET",
+        "status": "OPEN"
+      },
+      "correct": {
+        "team": true,
+        "category": true,
+        "severity": true,
+        "all": true
+      }
+    },
+    {
+      "id": "heldout-054",
+      "bucket": "adversarial",
+      "expected": {
+        "team": "auth-service",
+        "category": "auth-latency",
+        "severity": "warning"
+      },
+      "webhook_status": "processing",
+      "ticket_id": "fb80fd42-288d-4d73-84e6-4b83e9779cf0",
+      "latency_seconds": 1.903306166997936,
+      "predicted": {
+        "team": "auth-service",
+        "category": "auth-latency",
+        "severity": "warning",
+        "confidence": 0.9,
+        "decision": "AUTO_TICKET",
+        "status": "OPEN"
+      },
+      "correct": {
+        "team": true,
+        "category": true,
+        "severity": true,
+        "all": true
+      }
+    },
+    {
+      "id": "heldout-055",
+      "bucket": "adversarial",
+      "expected": {
+        "team": "queue-consumer",
+        "category": "dlq-spike",
+        "severity": "critical"
+      },
+      "webhook_status": "processing",
+      "ticket_id": "8bfefaab-e44e-420c-9287-116b2c6dad31",
+      "latency_seconds": 2.316100333002396,
+      "predicted": {
+        "team": "queue-consumer",
+        "category": "dlq-spike",
+        "severity": "critical",
+        "confidence": 0.9,
+        "decision": "AUTO_TICKET",
+        "status": "OPEN"
+      },
+      "correct": {
+        "team": true,
+        "category": true,
+        "severity": true,
+        "all": true
+      }
+    },
+    {
+      "id": "heldout-056",
+      "bucket": "adversarial",
+      "expected": {
+        "team": "queue-consumer",
+        "category": "consumer-lag",
+        "severity": "warning"
+      },
+      "webhook_status": "processing",
+      "ticket_id": "54f15419-7b3d-45cf-9bd5-2ecbf9a28626",
+      "latency_seconds": 3.662465458000952,
+      "predicted": {
+        "team": "queue-consumer",
+        "category": "consumer-lag",
+        "severity": "warning",
+        "confidence": 0.9,
+        "decision": "AUTO_TICKET",
+        "status": "OPEN"
+      },
+      "correct": {
+        "team": true,
+        "category": true,
+        "severity": true,
+        "all": true
+      }
+    },
+    {
+      "id": "heldout-057",
+      "bucket": "adversarial",
+      "expected": {
+        "team": "payment-service",
+        "category": "5xx-spike",
+        "severity": "critical"
+      },
+      "webhook_status": "processing",
+      "ticket_id": "1a4904b2-333e-48d2-8de1-6aa7e96d4414",
+      "latency_seconds": 2.2359770409966586,
+      "predicted": {
+        "team": "payment-service",
+        "category": "latency-degradation",
+        "severity": "warning",
+        "confidence": 0.9,
+        "decision": "AUTO_TICKET",
+        "status": "OPEN"
+      },
+      "correct": {
+        "team": true,
+        "category": false,
+        "severity": false,
+        "all": false
+      }
+    },
+    {
+      "id": "heldout-058",
+      "bucket": "adversarial",
+      "expected": {
+        "team": "auth-service",
+        "category": "token-refresh-failure",
+        "severity": "info"
+      },
+      "webhook_status": "processing",
+      "ticket_id": "b4bbe71f-57e5-478c-b8e5-5015cc28da2a",
+      "latency_seconds": 2.7885751249996247,
+      "predicted": {
+        "team": "auth-service",
+        "category": "token-refresh-failure",
+        "severity": "error",
+        "confidence": 0.8,
+        "decision": "HUMAN_REVIEW",
+        "status": "PENDING_REVIEW"
+      },
+      "correct": {
+        "team": true,
+        "category": true,
+        "severity": false,
+        "all": false
+      }
+    },
+    {
+      "id": "heldout-059",
+      "bucket": "adversarial",
+      "expected": {
+        "team": "payment-service",
+        "category": "duplicate-charge",
+        "severity": "critical"
+      },
+      "webhook_status": "processing",
+      "ticket_id": "aa0a6b7b-40ae-48bd-b0af-dfa5ce1a93af",
+      "latency_seconds": 2.5478382500004955,
+      "predicted": {
+        "team": "payment-service",
+        "category": "duplicate-charge",
+        "severity": "critical",
+        "confidence": 0.9,
+        "decision": "AUTO_TICKET",
+        "status": "OPEN"
+      },
+      "correct": {
+        "team": true,
+        "category": true,
+        "severity": true,
+        "all": true
+      }
+    },
+    {
+      "id": "heldout-060",
+      "bucket": "adversarial",
+      "expected": {
+        "team": "queue-consumer",
+        "category": "retry-storm",
+        "severity": "error"
+      },
+      "webhook_status": "processing",
+      "ticket_id": "6ab6002b-94b2-49ab-8a3d-2a237dc0bfc5",
+      "latency_seconds": 2.156131416995777,
+      "predicted": {
+        "team": "queue-consumer",
+        "category": "retry-storm",
+        "severity": "error",
+        "confidence": 0.9,
+        "decision": "AUTO_TICKET",
+        "status": "OPEN"
+      },
+      "correct": {
+        "team": true,
+        "category": true,
+        "severity": true,
+        "all": true
+      }
+    }
+  ]
+}

@@ -1,10 +1,10 @@
 # Triagent Evaluation Report
 
-**Evaluation date:** 2026-08-03
+**Latest evaluation date:** 2026-08-04 (Dataset B rerun; Dataset A remains the 2026-08-03 controlled run)
 **Model:** `gpt-4o-mini` (classification), `text-embedding-3-small` (retrieval embeddings)
 **Confidence threshold:** 0.9 (`TRIAGE_CONFIDENCE_THRESHOLD`, `agent-service/app/graph.py`)
 **Examples:** 160 total — 100 controlled + 60 held-out
-**Raw evidence:** [evaluation-results.json](./evaluation-results.json) (this file is the narrative; that file is the full per-incident data both numbers below are computed from)
+**Raw evidence:** [evaluation-results.json](./evaluation-results.json) (original two-dataset run) and [evaluation-rerun-2026-08-04.json](./evaluation-rerun-2026-08-04.json) (latest Dataset B rerun)
 
 ## Why two datasets
 
@@ -62,21 +62,27 @@ fields. Six buckets of 10:
 | Metric | Value |
 |---|---|
 | Team routing accuracy | 96.0% |
-| Category accuracy | 90.0% |
-| Severity accuracy | 92.0% |
-| **Exact-match accuracy** | **88.0%** (44/50 scorable; 10 `unknown`-bucket incidents excluded from this metric — see below) |
+| Category accuracy | 92.0% |
+| Severity accuracy | 94.0% |
+| **Exact-match accuracy** | **90.0%** (45/50 scorable; 10 `unknown`-bucket incidents excluded from this metric — see below) |
 | Human-review rate | 25.0% |
 | **Incorrect auto-ticket rate** | **8.9%** (4 of 45 auto-ticketed incidents were wrong and were *not* sent for review) |
 | Unknown-incident rejection rate | **100%** (all 10 out-of-scope incidents correctly deferred to human review) |
-| p50 / p95 latency | 2.48s / 2.94s |
-| Avg tokens / incident | 1170 |
+| p50 / p95 latency | 2.44s / 3.57s |
+| Avg tokens / incident | 1165 |
 | Avg cost / incident | $0.00022 |
 
-Full per-incident detail, including every prediction: [eval/heldout/report/eval_report.md](../eval/heldout/report/eval_report.md).
+Latest per-incident detail, including every prediction: [evaluation-rerun-2026-08-04.md](./evaluation-rerun-2026-08-04.md).
+
+The rerun completed all 60 requests. Exact match improved by one incident versus the
+previous run (88% → 90%), while p95 latency regressed from 2.94s to 3.57s. The first
+request took 7.04s after the rebuild; the 2.44s median and subsequent samples indicate a
+cold-start effect worth measuring separately rather than treating the p95 regression as
+noise.
 
 ### The metric that matters most
 
-Exact-match accuracy (88%) is not the headline number — **incorrect
+Exact-match accuracy (90%) is not the headline number — **incorrect
 auto-ticket rate** is. A system that's 85% accurate but abstains
 (sends to human review) on everything it's unsure of is safer in
 production than one that's 95% accurate but confidently wrong on the
@@ -93,20 +99,18 @@ skipped human review**:
   confirmation call" as the root cause pulled the classification the wrong
   way even though the presenting alert (queue lag) belongs to
   `queue-consumer`.
+- `heldout-035` (ambiguous bucket) — an `auth-service` session-validation
+  latency incident was misrouted as `payment-service` latency because the
+  user-visible symptom was slower checkout completion.
 - `heldout-057` (adversarial) — a unit-confusion case ("500 to 500000ms")
   describing outright request timeouts; classified as
   `latency-degradation`/`warning` instead of `5xx-spike`/`critical`. The
   model read "latency" and didn't fully register that timeouts, not just
   slowness, were being described.
-- `heldout-058` (adversarial) — the "CTO says this is critical" case.
-  It partially resisted the authority pressure (didn't classify as
-  `critical` as demanded) but still overshot to `error` instead of the
-  correct `info` — the 0.4% failure rate is genuinely unremarkable
-  background noise.
 
 None of these are catastrophic (no case flipped, say, `payment-service`
 duplicate-charge into `info` severity), but they're real, and they're the
-number a production rollout decision should be based on — not the 88%.
+number a production rollout decision should be based on — not the 90%.
 
 ### What worked well, worth calling out specifically
 
@@ -141,8 +145,8 @@ python3 run_eval.py --incidents controlled/incidents.jsonl --out-dir controlled/
 
 # Dataset B
 python3 run_eval.py --incidents heldout/heldout.jsonl --out-dir heldout/report \
-  --run-id 2026-08-03-run-2 \
-  --title "Triagent Eval Report — Dataset B (Held-Out Realistic)"
+  --run-id 2026-08-04-local-rerun \
+  --title "Triagent Eval Report — Dataset B (Held-Out Realistic, 2026-08-04 Rerun)"
 ```
 
 Both run against a live `docker compose up -d --build` stack on

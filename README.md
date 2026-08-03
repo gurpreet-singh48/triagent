@@ -15,10 +15,17 @@ for this project, not scaffolded from a template.
 
 ## Demo
 
-*(90-120s screen recording goes here: trigger a clear incident → show auto-classification
-and citations → trigger an ambiguous one → show it queue for human review → trigger a
-duplicate → same ticket returned → an incident with PII in it → show redaction → Grafana
-latency panel. Not recorded yet — see [Future improvements](#future-improvements).)*
+[![Watch the 104-second Triagent demo](docs/demo/triagent-demo-preview.gif)](docs/demo/triagent-demo.mp4)
+
+**[Watch/download the AI-narrated 104-second demo](docs/demo/triagent-demo.mp4)** — captured
+from the local Colima stack. It covers the ticket queue, an adversarial incident with
+redacted evidence and citations, streaming RAG chat, Grafana telemetry, and the fresh
+held-out evaluation rerun. An accessible [demo transcript](docs/demo/transcript.md) is
+included.
+
+| Grounded ticket evidence | Streaming RAG chat | Live observability |
+|---|---|---|
+| [![Ticket detail with rationale and citations](docs/screenshots/ticket-evidence.png)](docs/screenshots/ticket-evidence.png) | [![RAG chat answer with retrieved sources](docs/screenshots/rag-chat.png)](docs/screenshots/rag-chat.png) | [![Grafana Triagent overview](docs/screenshots/observability.png)](docs/screenshots/observability.png) |
 
 ## Results
 
@@ -27,12 +34,18 @@ for full methodology, per-incident detail, and limitations:
 
 | | Dataset A — controlled regression (n=100, generated) | Dataset B — held-out realistic (n=60, hand-authored) |
 |---|---|---|
-| Exact-match accuracy | 100% | 88.0% |
+| Exact-match accuracy | 100% | 90.0% |
 | Team routing accuracy | 100% | 96.0% |
 | **Incorrect auto-ticket rate** (wrong, but not sent for review) | 0% | **8.9%** |
 | Unknown-incident rejection rate | n/a | **100%** |
-| p50 / p95 latency | 2.49s / 4.34s | 2.48s / 2.94s |
+| p50 / p95 latency | 2.49s / 4.34s | 2.44s / 3.57s |
 | Avg cost / incident | $0.0002 | $0.0002 |
+
+Dataset B was rerun on 2026-08-04 against a freshly rebuilt local stack. All 60
+incidents returned tickets; exact match improved from 88% to 90%. The p95 rose from
+2.94s to 3.57s because the first request was a 7.04s cold start, while p50 improved to
+2.44s. See the [rerun report](docs/evaluation-rerun-2026-08-04.md) and
+[raw JSON](docs/evaluation-rerun-2026-08-04.json).
 
 The metric that matters more than the headline accuracy number is **incorrect auto-ticket
 rate** — how often the system was confidently wrong and skipped human review. A system
@@ -211,7 +224,7 @@ python3 ../synthetic-generator/generate.py --count 100 --seed 42 --out controlle
 
 # Dataset B — held-out realistic (hand-authored, committed at eval/heldout/heldout.jsonl)
 ./.venv/bin/python run_eval.py --incidents heldout/heldout.jsonl --out-dir heldout/report \
-  --run-id 2026-08-03-run-2
+  --run-id 2026-08-04-local-rerun
 ```
 
 Watch p50/p95 latency and token/cost counters populate live in Grafana
@@ -313,8 +326,6 @@ naming them:
 
 ## Future improvements
 
-- **Record the demo** described above — this is the most valuable thing missing right
-  now for anyone evaluating this project quickly.
 - Give the agent a real tool call (e.g., open a GitHub issue or post to Slack on
   auto-resolve) so "agentic" describes an action taken, not just a classification made.
 - Load-test with k6/locust for a real requests/sec number alongside the latency numbers.
