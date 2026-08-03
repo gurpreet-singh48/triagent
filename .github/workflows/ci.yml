@@ -118,7 +118,7 @@ jobs:
       # build over; lower severities are surfaced in the Security tab
       # instead of gating every PR.
       - name: Dockerfile config scan (Trivy)
-        uses: aquasecurity/trivy-action@0.28.0
+        uses: aquasecurity/trivy-action@v0.36.0
         with:
           scan-type: config
           scan-ref: .
@@ -131,7 +131,7 @@ jobs:
       # something a demo project should gate every PR on — this surfaces
       # findings in the Security tab for review instead.
       - name: Dependency scan (Trivy, report-only)
-        uses: aquasecurity/trivy-action@0.28.0
+        uses: aquasecurity/trivy-action@v0.36.0
         with:
           scan-type: fs
           scan-ref: .
