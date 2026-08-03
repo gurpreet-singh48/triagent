@@ -2,6 +2,7 @@ package com.incidentintel.webhook;
 
 import com.fasterxml.jackson.databind.JsonNode;
 import com.fasterxml.jackson.databind.ObjectMapper;
+import com.incidentintel.idempotency.RedisIdempotencyService;
 import com.incidentintel.support.AbstractIntegrationTest;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -12,6 +13,7 @@ import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 
 import java.util.List;
+import java.util.UUID;
 import java.util.concurrent.Callable;
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
@@ -27,13 +29,17 @@ import static org.assertj.core.api.Assertions.assertThat;
 
 /**
  * Idempotency guarantee (PLAN.md / reviewer spec): two requests with the
- * same dedup_key must produce exactly one incident, one agent invocation,
- * and one ticket — including when the two requests race concurrently.
+ * same dedup_key must produce exactly one incident and one agent invocation,
+ * including when the two requests race concurrently. Ticket idempotency is
+ * covered separately by TriageCallbackTest, which invokes the callback.
  */
 class WebhookIdempotencyTest extends AbstractIntegrationTest {
 
     @Autowired
     private ObjectMapper objectMapper;
+
+    @Autowired
+    private RedisIdempotencyService idempotencyService;
 
     private String webhookJson(String dedupKey, String summary) {
         return """
@@ -84,7 +90,7 @@ class WebhookIdempotencyTest extends AbstractIntegrationTest {
     }
 
     @Test
-    void concurrentDuplicates_produceExactlyOneIncidentOneAgentCallOneTicket() throws Exception {
+    void concurrentDuplicates_produceExactlyOneIncidentAndOneAgentCall() throws Exception {
         stubAgentServiceSuccess();
         String key = "concurrent-dup-" + System.nanoTime();
         String body = webhookJson(key, "payment-service 5xx spike, concurrent test");
@@ -127,5 +133,17 @@ class WebhookIdempotencyTest extends AbstractIntegrationTest {
         String incidentB = objectMapper.readTree(b.getBody()).get("incident_id").asText();
         assertThat(incidentA).isNotEqualTo(incidentB);
         AGENT_SERVICE.verify(2, postRequestedFor(urlEqualTo("/triage")));
+    }
+
+    @Test
+    void releaseOnlyDeletesReservationOwnedByCandidate() {
+        String key = "release-owner-" + System.nanoTime();
+        UUID owner = UUID.randomUUID();
+
+        assertThat(idempotencyService.tryReserve(key, owner)).isTrue();
+        assertThat(idempotencyService.release(key, UUID.randomUUID())).isFalse();
+        assertThat(idempotencyService.getExistingIncidentId(key)).contains(owner);
+        assertThat(idempotencyService.release(key, owner)).isTrue();
+        assertThat(idempotencyService.getExistingIncidentId(key)).isEmpty();
     }
 }

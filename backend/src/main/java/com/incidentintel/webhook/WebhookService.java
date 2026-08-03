@@ -89,7 +89,14 @@ public class WebhookService {
         incident.setClassName(payload.className());
         incident.setCustomDetails(payload.customDetails());
         incident.setStatus(IncidentStatus.RECEIVED);
-        incidentRepository.save(incident);
+        try {
+            incidentRepository.save(incident);
+        } catch (RuntimeException e) {
+            boolean released = idempotencyService.release(idempotencyKey, candidateId);
+            log.warn("incident insert failed after reserving idempotency key {}; reservation released={}",
+                    idempotencyKey, released, e);
+            throw e;
+        }
 
         incident.setStatus(IncidentStatus.TRIAGING);
         incidentRepository.save(incident);

@@ -210,7 +210,8 @@ python3 ../synthetic-generator/generate.py --count 100 --seed 42 --out controlle
 ./.venv/bin/python run_eval.py --incidents controlled/incidents.jsonl --out-dir controlled/report
 
 # Dataset B — held-out realistic (hand-authored, committed at eval/heldout/heldout.jsonl)
-./.venv/bin/python run_eval.py --incidents heldout/heldout.jsonl --out-dir heldout/report
+./.venv/bin/python run_eval.py --incidents heldout/heldout.jsonl --out-dir heldout/report \
+  --run-id 2026-08-03-run-2
 ```
 
 Watch p50/p95 latency and token/cost counters populate live in Grafana
@@ -243,10 +244,11 @@ full teardown checklist so nothing keeps billing afterward.
 
 ## Testing
 
-73 tests across all three services, all wired into CI (see the badge at the top):
+75 tests across all three services, all wired into CI (see the badge at the top):
 
-- **Backend (25, JUnit + Testcontainers + WireMock):** idempotency (concurrent duplicate
-  webhooks → one incident, one agent call), duplicate-callback recovery (concurrent
+- **Backend (27, JUnit + Testcontainers + WireMock):** idempotency (concurrent duplicate
+  webhooks → one incident, one agent call), failed-insert reservation compensation,
+  owner-safe Redis compare-and-delete, duplicate-callback recovery (concurrent
   callbacks racing on the DB unique constraint → both return the same ticket), the full
   `RECEIVED → TRIAGING → RETRYING → {TRIAGED, FAILED}` state machine including backoff
   bookkeeping and the scheduled retry job, ticket approve/reject state-transition guards

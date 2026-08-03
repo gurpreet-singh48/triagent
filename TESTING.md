@@ -309,7 +309,8 @@ python3 ../synthetic-generator/generate.py --count 100 --seed 42 --out controlle
 cat controlled/report/eval_report.md
 
 # Dataset B — held-out realistic (hand-authored, committed at eval/heldout/heldout.jsonl)
-./.venv/bin/python run_eval.py --incidents heldout/heldout.jsonl --out-dir heldout/report
+./.venv/bin/python run_eval.py --incidents heldout/heldout.jsonl --out-dir heldout/report \
+  --run-id 2026-08-03-run-2
 cat heldout/report/eval_report.md
 cd ..
 ```

@@ -141,6 +141,7 @@ python3 run_eval.py --incidents controlled/incidents.jsonl --out-dir controlled/
 
 # Dataset B
 python3 run_eval.py --incidents heldout/heldout.jsonl --out-dir heldout/report \
+  --run-id 2026-08-03-run-2 \
   --title "Triagent Eval Report — Dataset B (Held-Out Realistic)"
 ```
 

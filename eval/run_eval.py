@@ -14,12 +14,13 @@ report. Works for both:
   docs/evaluation-report.md for why this split exists.
 
 Usage:
-    python run_eval.py --incidents controlled/incidents.jsonl --out-dir controlled/report
-    python run_eval.py --incidents heldout/heldout.jsonl --out-dir heldout/report
+    python run_eval.py --incidents controlled/incidents.jsonl --out-dir controlled/report --run-id regression-2
+    python run_eval.py --incidents heldout/heldout.jsonl --out-dir heldout/report --run-id heldout-2
 """
 from __future__ import annotations
 
 import argparse
+import copy
 import json
 import math
 import time
@@ -61,6 +62,17 @@ def load_incidents(path: Path) -> list[dict]:
             if line:
                 incidents.append(json.loads(line))
     return incidents
+
+
+def apply_run_id(incidents: list[dict], run_id: str) -> list[dict]:
+    """Return fresh request payloads without changing the fixed dataset."""
+    run_incidents = copy.deepcopy(incidents)
+    for incident in run_incidents:
+        payload = incident["webhook_payload"]
+        original_key = payload.get("dedup_key")
+        if original_key:
+            payload["dedup_key"] = f"{original_key}-{run_id}"
+    return run_incidents
 
 
 def is_unknown_row(row: dict) -> bool:
@@ -166,7 +178,9 @@ def usage_delta(before: dict, after: dict) -> dict[str, float | None]:
     return delta
 
 
-def build_report(rows: list[dict], usage: dict[str, float | None] | None, n_incidents_for_cost: int) -> dict:
+def build_report(
+    rows: list[dict], usage: dict[str, float | None] | None, n_incidents_for_cost: int, run_id: str
+) -> dict:
     total = len(rows)
     responded = [r for r in rows if r["predicted"] is not None]
     n_responded = len(responded)
@@ -218,6 +232,22 @@ def build_report(rows: list[dict], usage: dict[str, float | None] | None, n_inci
         for r in rows
     )
 
+    threshold_calibration = []
+    for threshold in (0.85, 0.90, 0.95, 0.98):
+        eligible = [
+            r for r in scorable
+            if r["predicted"].get("confidence") is not None
+            and r["predicted"]["confidence"] >= threshold
+        ]
+        incorrect = sum(1 for r in eligible if not r["correct"]["all"])
+        threshold_calibration.append({
+            "threshold": threshold,
+            "auto_ticket_coverage": len(eligible) / n_scorable if n_scorable else None,
+            "incorrect_auto_ticket_rate": incorrect / len(eligible) if eligible else None,
+            "auto_ticket_count": len(eligible),
+            "incorrect_auto_ticket_count": incorrect,
+        })
+
     cost = None
     if usage is not None:
         chat_prompt = usage.get("chat_prompt") or 0.0
@@ -241,6 +271,7 @@ def build_report(rows: list[dict], usage: dict[str, float | None] | None, n_inci
 
     return {
         "generated_at": datetime.now(timezone.utc).isoformat(),
+        "run_id": run_id,
         "total_incidents": total,
         "responded_incidents": n_responded,
         "unresponded_incidents": total - n_responded,
@@ -259,6 +290,7 @@ def build_report(rows: list[dict], usage: dict[str, float | None] | None, n_inci
             "incorrect_auto_ticket_rate": incorrect_auto_ticket_rate,
             "unknown_rejection_rate": unknown_rejection_rate,
         },
+        "threshold_calibration": threshold_calibration,
         "latency_seconds": {
             "p50": percentile(latencies, 50),
             "p95": percentile(latencies, 95),
@@ -288,6 +320,7 @@ def write_markdown(report: dict, path: Path, title: str) -> None:
         f"# {title}",
         "",
         f"Generated: {report['generated_at']}",
+        f"Run ID: `{report['run_id']}`",
         "",
         f"- Total incidents: {report['total_incidents']}",
         f"- Responded (ticket created): {report['responded_incidents']}",
@@ -341,6 +374,20 @@ def write_markdown(report: dict, path: Path, title: str) -> None:
             lines.append(f"| {bucket} | {stats['n']} | {pct(stats['exact_match'])} | {pct(stats['human_review_rate'])} |")
         lines.append("")
 
+    lines += [
+        "## Threshold calibration",
+        "",
+        "| Threshold | Auto-ticket coverage | Incorrect auto-ticket rate |",
+        "|---|---|---|",
+    ]
+    for item in report["threshold_calibration"]:
+        lines.append(
+            f"| {item['threshold']:.2f} | {pct(item['auto_ticket_coverage'])} "
+            f"({item['auto_ticket_count']}) | {pct(item['incorrect_auto_ticket_rate'])} "
+            f"({item['incorrect_auto_ticket_count']}) |"
+        )
+    lines.append("")
+
     lines += ["## Decision breakdown", "", "| Outcome | Count |", "|---|---|"]
     for outcome, count in sorted(report["decision_breakdown"].items()):
         lines.append(f"| {outcome} | {count} |")
@@ -380,9 +427,14 @@ def main() -> None:
     parser.add_argument("--title", default="Triagent Eval Report")
     parser.add_argument("--timeout", type=float, default=60.0, help="per-request timeout in seconds")
     parser.add_argument("--no-cost", action="store_true", help="skip Prometheus cost/token collection")
+    parser.add_argument(
+        "--run-id",
+        default=datetime.now(timezone.utc).strftime("%Y%m%dT%H%M%SZ"),
+        help="suffix for dedup keys; defaults to the current UTC timestamp",
+    )
     args = parser.parse_args()
 
-    incidents = load_incidents(Path(args.incidents))
+    incidents = apply_run_id(load_incidents(Path(args.incidents)), args.run_id)
     print(f"Loaded {len(incidents)} incidents from {args.incidents}")
 
     usage_before = None if args.no_cost else collect_openai_usage(args.prometheus_url)
@@ -403,7 +455,7 @@ def main() -> None:
         usage_after = collect_openai_usage(args.prometheus_url)
         usage = usage_delta(usage_before, usage_after)
 
-    report = build_report(rows, usage, len(incidents))
+    report = build_report(rows, usage, len(incidents), args.run_id)
 
     out_dir = Path(args.out_dir)
     out_dir.mkdir(parents=True, exist_ok=True)

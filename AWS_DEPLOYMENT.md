@@ -73,10 +73,10 @@ Security") → **Create security group**
 - Outbound: leave the default "all traffic allowed" — the backend needs to
   reach the OpenAI API.
 
-Using "My IP" instead of "Anywhere" means only your current IP can reach
-it. If you want to share the live link with someone else temporarily,
-you can edit the rule to "Anywhere" (0.0.0.0/0) for the demo window and
-revert it after — just know that opens the ports to the whole internet.
+Using "My IP" means only your current IP can reach the services. If you
+temporarily share the demo, broaden **only port 5173 (the frontend)** to
+`0.0.0.0/0`, then revert it immediately afterward. Keep the backend,
+Grafana, and Prometheus restricted to your IP.
 
 ## Step 2: Key pair
 
@@ -134,7 +134,16 @@ docker compose version   # sanity check
 git clone https://github.com/<you>/triagent.git
 cd triagent
 cp .env.example .env
-nano .env    # paste in your real OPENAI_API_KEY, save (Ctrl+O, Enter, Ctrl+X)
+
+# Generate independent deployment secrets. Copy each output into .env.
+openssl rand -hex 32      # INTERNAL_SERVICE_TOKEN
+openssl rand -base64 24  # GRAFANA_ADMIN_PASSWORD
+openssl rand -base64 24  # POSTGRES_PASSWORD
+
+nano .env
+# Replace OPENAI_API_KEY, INTERNAL_SERVICE_TOKEN, GRAFANA_ADMIN_PASSWORD,
+# and POSTGRES_PASSWORD. Also set GF_AUTH_ANONYMOUS_ENABLED=false.
+# Save with Ctrl+O, Enter, Ctrl+X.
 ```
 
 ## Step 6: Bring the stack up
@@ -171,7 +180,7 @@ cd ..
 
 From your own laptop's browser (not the SSH session):
 - Dashboard: `http://<public-ip>:5173`
-- Grafana: `http://<public-ip>:3000` (admin/admin)
+- Grafana: `http://<public-ip>:3000` (user `admin`, password from `.env`)
 - Prometheus: `http://<public-ip>:9090`
 
 Trigger an incident from your laptop to prove it's really live on AWS:
