@@ -26,7 +26,8 @@ import static org.awaitility.Awaitility.await;
 
 /**
  * Webhook-side failure handling: the backend must never leave an incident
- * stuck in TRIAGING, and must never 500 on a malformed request.
+ * stuck in TRIAGING, must persist retryable failures for the scheduler,
+ * and must never 500 on a malformed request.
  */
 class WebhookFailureTest extends AbstractIntegrationTest {
 
@@ -73,7 +74,7 @@ class WebhookFailureTest extends AbstractIntegrationTest {
     }
 
     @Test
-    void agentServiceReturns500_incidentMarkedFailedNoTicket() throws Exception {
+    void agentServiceReturns500_incidentScheduledForRetryWithNoTicket() throws Exception {
         stubFor(post(urlEqualTo("/triage")).willReturn(aResponse().withStatus(500)));
         String key = "agent-5xx-" + System.nanoTime();
 
@@ -82,11 +83,14 @@ class WebhookFailureTest extends AbstractIntegrationTest {
         assertThat(body.get("ticket_id").isNull()).isTrue();
 
         Incident incident = awaitIncident(body.get("incident_id").asText());
-        assertThat(incident.getStatus()).isEqualTo(IncidentStatus.FAILED);
+        assertThat(incident.getStatus()).isEqualTo(IncidentStatus.RETRYING);
+        assertThat(incident.getAttemptCount()).isEqualTo(1);
+        assertThat(incident.getErrorCategory()).isEqualTo("http_5xx");
+        assertThat(incident.getNextRetryAt()).isNotNull();
     }
 
     @Test
-    void agentServiceUnreachable_incidentMarkedFailedNoException() throws Exception {
+    void agentServiceUnreachable_incidentScheduledForRetryNoException() throws Exception {
         // No stub registered + WireMock configured to actually refuse the
         // connection for this path: simulate by pointing at a closed port
         // via a fault instead, which is closer to "service down" than 404.
@@ -100,11 +104,14 @@ class WebhookFailureTest extends AbstractIntegrationTest {
         assertThat(body.get("ticket_id").isNull()).isTrue();
 
         Incident incident = awaitIncident(body.get("incident_id").asText());
-        assertThat(incident.getStatus()).isEqualTo(IncidentStatus.FAILED);
+        assertThat(incident.getStatus()).isEqualTo(IncidentStatus.RETRYING);
+        assertThat(incident.getAttemptCount()).isEqualTo(1);
+        assertThat(incident.getErrorCategory()).isEqualTo("timeout_or_connection_error");
+        assertThat(incident.getNextRetryAt()).isNotNull();
     }
 
     @Test
-    void agentServiceTimesOut_incidentMarkedFailed() throws Exception {
+    void agentServiceTimesOut_incidentScheduledForRetry() throws Exception {
         // Base class configures a 2s read timeout; delay the stub response
         // well past that so the RestClient call itself times out.
         stubFor(post(urlEqualTo("/triage")).willReturn(aResponse()
@@ -118,6 +125,9 @@ class WebhookFailureTest extends AbstractIntegrationTest {
         JsonNode body = objectMapper.readTree(response.getBody());
 
         Incident incident = awaitIncident(body.get("incident_id").asText());
-        assertThat(incident.getStatus()).isEqualTo(IncidentStatus.FAILED);
+        assertThat(incident.getStatus()).isEqualTo(IncidentStatus.RETRYING);
+        assertThat(incident.getAttemptCount()).isEqualTo(1);
+        assertThat(incident.getErrorCategory()).isEqualTo("timeout_or_connection_error");
+        assertThat(incident.getNextRetryAt()).isNotNull();
     }
 }
